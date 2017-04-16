@@ -13,8 +13,8 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from sklearn.cross_validation import train_test_split
 
-img_height = 640
-img_width = 480
+img_height = 64
+img_width = 64
 num_classes = 10
 np.random.seed(133)
 
@@ -121,5 +121,5 @@ model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(X_train, y_train, batch_size=128, nb_epoch=5, 
+model.fit(X_train, y_train, batch_size=32, nb_epoch=5, 
           verbose=1, validation_data=(X_test, y_test))
