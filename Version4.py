@@ -96,7 +96,7 @@ X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
 model = Sequential()
 
 model.add(Conv2D(32, (3, 3), padding='same',
-                 input_shape=x_train.shape[1:]))
+                 input_shape=(img_width, img_height, 3)))
 model.add(Activation('relu'))
 model.add(Conv2D(32, (3, 3)))
 model.add(Activation('relu'))
