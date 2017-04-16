@@ -17,7 +17,7 @@ img_width = 480
 num_classes = 10
 np.random.seed(133)
 
-filename = "imgs.zip"
+filename = "/home/ubuntu/imgs.zip"
 
 def maybe_extract(filename, force=True):
     root = os.path.splitext(os.path.splitext(filename)[0])[0]  # remove .zip
