@@ -91,8 +91,8 @@ def split_validation_set(train, target, test_size):
     return X_train, X_test, y_train, y_test
 
 X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+y_train = keras.np_utils.to_categorical(y_train, num_classes)
+y_test = keras.np_utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
 
