@@ -79,8 +79,8 @@ num_train = dataset_size()
 x_train, y_train = merge_folder(folders) 
 
 r = np.random.permutation(len(y_train))
-x_train = x_train[r,:,:,:] 
-y_train = [r]
+train = x_train[r,:,:,:] 
+target = [r]
 
 def split_validation_set(train, target, test_size):
     random_state = 51
