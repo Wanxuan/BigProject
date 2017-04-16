@@ -84,3 +84,10 @@ target = y_train[r]
 print(train.shape)
 print(len(target))
 
+def split_validation_set(train, target, test_size):
+    random_state = 51
+    X_train, X_test, y_train, y_test = train_test_split(
+        train, target, test_size=test_size, random_state=random_state)
+    return X_train, X_test, y_train, y_test
+
+X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
