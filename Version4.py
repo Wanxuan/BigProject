@@ -82,7 +82,8 @@ x_train, y_train = merge_folder(folders)
 r = np.random.permutation(len(y_train))
 train = x_train[r,:,:,:] 
 target = y_train[r]
-
+train = train.astype('float32')
+train /= 255
 
 def split_validation_set(train, target, test_size):
     random_state = 51
@@ -91,11 +92,6 @@ def split_validation_set(train, target, test_size):
     return X_train, X_test, y_train, y_test
 
 X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
-X_train = X_train.astype('float32')
-X_test = X_test.astype('float32')
-X_train /= 255
-X_test /= 255
-
 y_train = np_utils.to_categorical(y_train, num_classes)
 y_test = np_utils.to_categorical(y_test, num_classes)
 
