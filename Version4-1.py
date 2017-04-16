@@ -1,4 +1,4 @@
-from Version4.py import train, target
+from Version4.py import X_train, X_test, y_train, y_test
 
 model = Sequential()
 
@@ -27,4 +27,4 @@ model.compile(loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 model.fit(X_train, y_train, batch_size=128, nb_epoch=5, 
-          verbose=1, validation_split=0.2, validation_data=(X_test, y_test)
+          verbose=1, validation_split=0.2, validation_data=(X_test, y_test))
