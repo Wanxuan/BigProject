@@ -82,8 +82,13 @@ x_train, y_train = merge_folder(folders)
 r = np.random.permutation(len(y_train))
 train = x_train[r,:,:,:] 
 target = y_train[r]
-train = train.astype('float32')
-train /= 255
+
+def normalize(data):
+    a = 0.0
+    b = 255.0
+    return (data-a)/(b-a)
+
+train = normalize(train)
 
 def split_validation_set(train, target, test_size):
     random_state = 51
@@ -113,10 +118,8 @@ model.add(Flatten())
 model.add(Dense(10))
 model.add(Activation('softmax'))
 
-# initiate RMSprop optimizer
 opt = keras.optimizers.Adam(lr=1e-3)
 
-# Let's train the model using RMSprop
 model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
