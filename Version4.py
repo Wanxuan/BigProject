@@ -117,9 +117,9 @@ model.add(Activation('softmax'))
 opt = keras.optimizers.Adam(lr=1e-3)
 
 # Let's train the model using RMSprop
-model.compile(loss='categorical_crossentropy',
-              optimizer=opt,
+model.compile(optimizer=opt,
+              loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 model.fit(X_train, y_train, batch_size=128, nb_epoch=5, 
-          show_accuracy=True, verbose=1, validation_data=(X_test, y_test))
+          verbose=1, validation_data=(X_test, y_test))
