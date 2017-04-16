@@ -80,7 +80,7 @@ x_train, y_train = merge_folder(folders)
 
 r = np.random.permutation(len(y_train))
 train = x_train[r,:,:,:] 
-target = [r]
+target = y_train[r]
 print(train.shape)
 print(len(target))
 
