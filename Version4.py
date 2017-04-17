@@ -1,6 +1,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import random
 import os
 import zipfile
 from PIL import Image
@@ -17,7 +18,7 @@ img_height = 640
 img_width = 480
 num_classes = 10
 batch_size = 32
-nb_epoch = 5
+nb_epoch = 1
 np.random.seed(133)
 
 filename = "/home/ubuntu/imgs.zip"
