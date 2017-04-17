@@ -151,7 +151,7 @@ model.compile(optimizer=opt,
               metrics=['accuracy'])
 
 model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
-          show_accuracy=True, verbose=1, validation_data=(X_test, y_test))
+          verbose=1, validation_data=(X_test, y_test))
 
 
 json_string = model.to_json()  
