@@ -78,20 +78,35 @@ def merge_folder(folders):
         y_train[folders_size-folder_size:folders_size] = label
     return x_train, y_train
 
-folders = maybe_extract(filename)
-num_train = dataset_size()
-x_train, y_train = merge_folder(folders[0:5]) 
+def cache_data(data, path):
+    if os.path.isdir(os.path.dirname(path)):
+        file = open(path, 'wb')
+        pickle.dump(data, file)
+        file.close()
+    else:
+        print('Directory doesnt exists')
 
-r = np.random.permutation(len(y_train))
-train = x_train[r,:,:,:] 
-target = y_train[r]
-
+def restore_data(path):
+    data = dict()
+    if os.path.isfile(path):
+        file = open(path, 'rb')
+        data = pickle.load(file)
+    return data
 
 def split_validation_set(train, target, test_size):
     random_state = 51
     X_train, X_test, y_train, y_test = train_test_split(
         train, target, test_size=test_size, random_state=random_state)
     return X_train, X_test, y_train, y_test
+
+
+folders = maybe_extract(filename)
+num_train = dataset_size()
+x_train, y_train = merge_folder(folders[0:3]) 
+
+r = np.random.permutation(len(y_train))
+train = x_train[r,:,:,:] 
+target = y_train[r]
 
 X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
 y_train = np_utils.to_categorical(y_train, num_classes)
@@ -138,6 +153,6 @@ n_test = X_test.shape[0]
 index = random.randint(0, n_test-1)
 y_pred = model.predict(X_test[index].reshape(1, img_width, img_height, 3))
 
-plt.title('real: %s\npred:%s'%(get_result([y_test[x][index] for x in range(n_len)]), get_result(y_pred)))
+plt.title('real: %s\npred:%s'%(get_result(y_test[x][index]), get_result(y_pred)))
 plt.imshow(X_test[index,:,:,0])
 plt.axis('off')
