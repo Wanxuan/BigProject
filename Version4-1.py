@@ -2,6 +2,8 @@ import pickle
 
 pkl_file = open('train_model.pkl', 'rb')
 model = pickle.load(pkl_file)
+X_test = pickle.load(pkl_file)
+y_test = pickle.load(pkl_file)
 
 def get_result(result):
     # 将 one_hot 编码解码
