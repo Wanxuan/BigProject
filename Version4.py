@@ -101,7 +101,7 @@ def restore_data(path):
     return data
 
 def read_train_data():
-    cache_path = os.path.join('cache', 'train_w_' + str(img_width) + '_h_' + str(img_height) + '_t_' + str(color_type) + '.dat')
+    cache_path = os.path.join('cache', 'train_w_' + str(img_width) + '_h_' + str(img_height) + '.dat')
     if not os.path.isfile(cache_path):
         x_train, y_train = merge_folder(folders[0:3]) 
         r = np.random.permutation(len(y_train))
