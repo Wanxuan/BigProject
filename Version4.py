@@ -15,7 +15,7 @@ from sklearn.cross_validation import train_test_split
 
 img_height = 640
 img_width = 480
-num_classes = 5
+num_classes = 10
 batch_size = 32
 nb_epoch = 5
 np.random.seed(133)
