@@ -1,5 +1,3 @@
-%config Application.verbose_crash=True
-
 import pickle
 import random
 import numpy as np
