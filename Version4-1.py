@@ -1,4 +1,5 @@
 import pickle
+import random
 from keras.models import model_from_json
 
 pkl_file = open('test.pkl', 'rb')
