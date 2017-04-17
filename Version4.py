@@ -4,6 +4,7 @@ import numpy as np
 import random
 import os
 import zipfile
+import pickle
 from PIL import Image
 
 import keras
@@ -14,8 +15,8 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from sklearn.cross_validation import train_test_split
 
-img_height = 640
-img_width = 480
+img_height = 480
+img_width = 640
 num_classes = 10
 batch_size = 32
 nb_epoch = 1
@@ -56,7 +57,7 @@ def load_image(folder):
     
     imgs = [i for i in os.listdir(folder)]
     num = len(imgs)
-    data = np.zeros((num, img_width, img_height, 3), dtype='uint8')
+    data = np.zeros((num, img_height, img_width, 3), dtype='uint8')
     label = np.zeros((num,), dtype="uint8")
     for i in range(num):
         img = Image.open(folder+"/"+imgs[i])
@@ -66,7 +67,7 @@ def load_image(folder):
     
 def merge_folder(folders):
     
-    x_train = np.zeros((num_train, img_width, img_height, 3), dtype='uint8')
+    x_train = np.zeros((num_train, img_height, img_width, 3), dtype='uint8')
     y_train = np.zeros((num_train,), dtype="uint8")
     folders_size = 0
     for f in folders:
@@ -77,6 +78,12 @@ def merge_folder(folders):
         x_train[folders_size-folder_size:folders_size,:,:,:] = data
         y_train[folders_size-folder_size:folders_size] = label
     return x_train, y_train
+
+def split_validation_set(train, target, test_size):
+    random_state = 51
+    X_train, X_test, y_train, y_test = train_test_split(
+        train, target, test_size=test_size, random_state=random_state)
+    return X_train, X_test, y_train, y_test
 
 def cache_data(data, path):
     if os.path.isdir(os.path.dirname(path)):
@@ -93,24 +100,24 @@ def restore_data(path):
         data = pickle.load(file)
     return data
 
-def split_validation_set(train, target, test_size):
-    random_state = 51
-    X_train, X_test, y_train, y_test = train_test_split(
-        train, target, test_size=test_size, random_state=random_state)
+def read_train_data():
+    cache_path = os.path.join('cache', 'train_w_' + str(img_width) + '_h_' + str(img_height) + '_t_' + str(color_type) + '.dat')
+    if not os.path.isfile(cache_path):
+        x_train, y_train = merge_folder(folders[0:3]) 
+        r = np.random.permutation(len(y_train))
+        train = x_train[r,:,:,:] 
+        target = y_train[r]
+        X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
+        y_train = np_utils.to_categorical(y_train, num_classes)
+        y_test = np_utils.to_categorical(y_test, num_classes)
+        cache_data((X_train, X_test, y_train, y_test), cache_path)
+    else:
+        print('Restore train from cache!')
+        (X_train, X_test, y_train, y_test) = restore_data(cache_path)
+    print('Train shape:', X_train.shape)
+    print('Test shape:', X_test.shape)
     return X_train, X_test, y_train, y_test
-
-
-folders = maybe_extract(filename)
-num_train = dataset_size()
-x_train, y_train = merge_folder(folders[0:3]) 
-
-r = np.random.permutation(len(y_train))
-train = x_train[r,:,:,:] 
-target = y_train[r]
-
-X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
-y_train = np_utils.to_categorical(y_train, num_classes)
-y_test = np_utils.to_categorical(y_test, num_classes)
+    
 
 model = Sequential()
 
@@ -141,18 +148,13 @@ model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
+folders = maybe_extract(filename)
+num_train = dataset_size()
+X_train, X_test, y_train, y_test = read_train_data()
+
 model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
           show_accuracy=True, verbose=1, validation_data=(X_test, y_test))
 
-def get_result(result):
-    # 将 one_hot 编码解码
-    resultstr = str(np.argmax(result[i]))
-    return resultstr
-
-n_test = X_test.shape[0]
-index = random.randint(0, n_test-1)
-y_pred = model.predict(X_test[index].reshape(1, img_width, img_height, 3))
-
-plt.title('real: %s\npred:%s'%(get_result(y_test[x][index]), get_result(y_pred)))
-plt.imshow(X_test[index,:,:,0])
-plt.axis('off')
+train_model = open('train_model.pkl', 'wb')
+pickle.dump(model, train_model)
+train_model.close()
