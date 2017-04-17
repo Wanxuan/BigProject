@@ -1,13 +1,10 @@
-
 import matplotlib.pyplot as plt
 import numpy as np
-import random
 import os
 import zipfile
 import pickle
 from PIL import Image
 import h5py 
-from keras.models import model_from_json 
 
 import keras
 from keras.utils import np_utils
