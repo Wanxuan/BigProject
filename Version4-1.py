@@ -1,30 +1,17 @@
-from Version4.py import X_train, X_test, y_train, y_test
+import pickle
 
-model = Sequential()
+pkl_file = open('train_model.pkl', 'rb')
+model = pickle.load(pkl_file)
 
-model.add(Conv2D(32, 3, 3, border_mode='same', init='he_normal', input_shape=train.shape[1:]))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
+def get_result(result):
+    # 将 one_hot 编码解码
+    resultstr = str(np.argmax(result[i]))
+    return resultstr
 
-model.add(Conv2D(64, 3, 3, border_mode='same', init='he_normal'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
+n_test = X_test.shape[0]
+index = random.randint(0, n_test-1)
+y_pred = model.predict(X_test[index].reshape(1, img_width, img_height, 3))
 
-model.add(Conv2D(128, 3, 3, border_mode='same', init='he_normal'))
-model.add(MaxPooling2D(pool_size=(8, 8)))
-model.add(Dropout(0.5))
-
-model.add(Flatten())
-model.add(Dense(10))
-model.add(Activation('softmax'))
-
-# initiate RMSprop optimizer
-opt = keras.optimizers.Adam(lr=1e-3)
-
-# Let's train the model using RMSprop
-model.compile(loss='categorical_crossentropy',
-              optimizer=opt,
-              metrics=['accuracy'])
-
-model.fit(X_train, y_train, batch_size=128, nb_epoch=5, 
-          verbose=1, validation_split=0.2, validation_data=(X_test, y_test))
+plt.title('real: %s\npred:%s'%(get_result(y_test[index]), get_result(y_pred)))
+plt.imshow(X_test[index,:,:,0])
+plt.axis('off')
