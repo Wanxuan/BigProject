@@ -84,8 +84,7 @@ x_train, y_train = merge_folder(folders[0:3])
 r = np.random.permutation(len(y_train))
 train = x_train[r,:,:,:] 
 target = y_train[r]
-train = train.astype('float32')
-train /= 255.0
+
 
 def split_validation_set(train, target, test_size):
     random_state = 51
