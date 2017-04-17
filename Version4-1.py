@@ -1,5 +1,8 @@
+%config Application.verbose_crash=True
+
 import pickle
 import random
+import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import model_from_json
 
