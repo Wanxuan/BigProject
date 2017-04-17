@@ -98,15 +98,15 @@ y_test = np_utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, border_mode='same', init='he_normal', input_shape=train.shape[1:]))
+model.add(Conv2D(32, 3, 3, activation='relu', border_mode='same', init='he_normal', input_shape=train.shape[1:]))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
-model.add(Conv2D(64, 3, 3, border_mode='same', init='he_normal'))
+model.add(Conv2D(64, 3, 3, activation='relu', border_mode='same', init='he_normal'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
-model.add(Conv2D(128, 3, 3, border_mode='same', init='he_normal'))
+model.add(Conv2D(128, 3, 3, activation='relu', border_mode='same', init='he_normal'))
 model.add(MaxPooling2D(pool_size=(8, 8)))
 model.add(Dropout(0.5))
 
