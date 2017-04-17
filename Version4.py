@@ -18,7 +18,7 @@ img_height = 480
 img_width = 640
 num_classes = 10
 batch_size = 32
-nb_epoch = 3
+nb_epoch = 1
 np.random.seed(133)
 
 filename = "/home/ubuntu/imgs.zip"
@@ -155,8 +155,8 @@ model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
 
 
 json_string = model.to_json()  
-open('my_model.json','w').write(json_string)  
-model.save_weights('my_model_weights.h5')
+open('1_model.json','w').write(json_string)  
+model.save_weights('1_model_weights.h5')
 train_model = open('test.pkl', 'wb')
 pickle.dump(X_test, train_model)
 pickle.dump(y_test, train_model)
