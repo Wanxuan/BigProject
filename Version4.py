@@ -118,10 +118,13 @@ def read_train_data():
     print('Test shape:', X_test.shape)
     return X_train, X_test, y_train, y_test
     
-
+folders = maybe_extract(filename)
+num_train = dataset_size()
+X_train, X_test, y_train, y_test = read_train_data()
+    
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, activation='relu', border_mode='same', input_shape=train.shape[1:]))
+model.add(Conv2D(32, 3, 3, activation='relu', border_mode='same', input_shape=X_train.shape[1:]))
 model.add(Conv2D(32, 3, 3, activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
@@ -147,10 +150,6 @@ opt = keras.optimizers.Adam(lr=1e-3)
 model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
-
-folders = maybe_extract(filename)
-num_train = dataset_size()
-X_train, X_test, y_train, y_test = read_train_data()
 
 model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
           show_accuracy=True, verbose=1, validation_data=(X_test, y_test))
