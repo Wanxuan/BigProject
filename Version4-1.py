@@ -23,7 +23,7 @@ n_test = X_test.shape[0]
 index = random.randint(0, n_test-1)
 y_pred = model.predict(X_test[index].reshape(1, img_height, img_width, 3))
 print(X_test[index])
-print(get_result(result))
+print(get_result(y_pred))
 
 plt.title('real: %s\npred:%s'%(get_result(y_test[index]), get_result(y_pred)))
 plt.imshow(X_test[index,:,:,0])
