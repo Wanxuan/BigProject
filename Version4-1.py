@@ -1,5 +1,6 @@
 import pickle
 import random
+import matplotlib.pyplot as plt
 from keras.models import model_from_json
 
 pkl_file = open('test.pkl', 'rb')
