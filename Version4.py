@@ -15,7 +15,7 @@ from sklearn.cross_validation import train_test_split
 
 img_height = 640
 img_width = 480
-num_classes = 10
+num_classes = 5
 batch_size = 32
 nb_epoch = 5
 np.random.seed(133)
@@ -79,7 +79,7 @@ def merge_folder(folders):
 
 folders = maybe_extract(filename)
 num_train = dataset_size()
-x_train, y_train = merge_folder(folders) 
+x_train, y_train = merge_folder(folders[0:5]) 
 
 r = np.random.permutation(len(y_train))
 train = x_train[r,:,:,:] 
@@ -98,20 +98,25 @@ y_test = np_utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, activation='relu', border_mode='same', init='he_normal', input_shape=train.shape[1:]))
+model.add(Conv2D(32, 3, 3, activation='relu', border_mode='same', input_shape=train.shape[1:]))
+model.add(Conv2D(32, 3, 3, activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
-model.add(Conv2D(64, 3, 3, activation='relu', border_mode='same', init='he_normal'))
+model.add(Conv2D(64, 3, 3, activation='relu', border_mode='same'))
+model.add(Conv2D(64, 3, 3, activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
-model.add(Conv2D(128, 3, 3, activation='relu', border_mode='same', init='he_normal'))
+model.add(Conv2D(128, 3, 3, activation='relu', border_mode='same'))
 model.add(MaxPooling2D(pool_size=(8, 8)))
 model.add(Dropout(0.5))
 
 model.add(Flatten())
-model.add(Dense(10))
+model.add(Dense(512))
+model.add(Activation('relu'))
+model.add(Dropout(0.5))
+model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 opt = keras.optimizers.Adam(lr=1e-3)
@@ -125,11 +130,10 @@ model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
 
 def get_result(result):
     # 将 one_hot 编码解码
-    resultstr = ''
-    for i in range(n_len):
-        resultstr += str(np.argmax(result[i])) + ','
+    resultstr = str(np.argmax(result[i]))
     return resultstr
 
+n_test = X_test.shape[0]
 index = random.randint(0, n_test-1)
 y_pred = model.predict(X_test[index].reshape(1, img_width, img_height, 3))
 
