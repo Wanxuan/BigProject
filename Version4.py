@@ -18,7 +18,7 @@ img_height = 480
 img_width = 640
 num_classes = 10
 batch_size = 32
-nb_epoch = 1
+nb_epoch = 3
 np.random.seed(133)
 
 filename = "/home/ubuntu/imgs.zip"
@@ -102,7 +102,7 @@ def restore_data(path):
 def read_train_data():
     cache_path = os.path.join('cache', 'train_w_' + str(img_width) + '_h_' + str(img_height) + '.dat')
     if not os.path.isfile(cache_path):
-        x_train, y_train = merge_folder(folders[0:3]) 
+        x_train, y_train = merge_folder(folders) 
         r = np.random.permutation(len(y_train))
         train = x_train[r,:,:,:] 
         target = y_train[r]
