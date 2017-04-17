@@ -16,7 +16,7 @@ model.load_weights('my_model_weights.h5')
 
 def get_result(result):
     # 将 one_hot 编码解码
-    resultstr = str(np.argmax(result[i]))
+    resultstr = str(np.argmax(result))
     return resultstr
 
 n_test = X_test.shape[0]
