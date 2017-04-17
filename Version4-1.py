@@ -1,4 +1,5 @@
 import pickle
+from keras.models import model_from_json
 
 pkl_file = open('test.pkl', 'rb')
 X_test = pickle.load(pkl_file)
