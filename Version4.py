@@ -156,4 +156,6 @@ model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
 
 train_model = open('train_model.pkl', 'wb')
 pickle.dump(model, train_model)
+pickle.dump(X_test, train_model)
+pickle.dump(y_test, train_model)
 train_model.close()
