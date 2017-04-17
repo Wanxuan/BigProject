@@ -1,6 +1,6 @@
 import pickle
 
-pkl_file = open('train_model.pkl', 'rb')
+pkl_file = open('test.pkl', 'rb')
 X_test = pickle.load(pkl_file)
 y_test = pickle.load(pkl_file)
 
