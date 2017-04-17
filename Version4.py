@@ -6,6 +6,7 @@ import os
 import zipfile
 import pickle
 from PIL import Image
+import h5py from keras.models import model_from_json  
 
 import keras
 from keras.utils import np_utils
@@ -154,8 +155,11 @@ model.compile(optimizer=opt,
 model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
           show_accuracy=True, verbose=1, validation_data=(X_test, y_test))
 
-train_model = open('train_model.pkl', 'wb')
-pickle.dump(model, train_model)
+
+json_string = model.to_json()  
+open('my_model.json','w').write(json_string)  
+model.save_weights('my_model_weights.h5')
+train_model = open('test.pkl', 'wb')
 pickle.dump(X_test, train_model)
 pickle.dump(y_test, train_model)
 train_model.close()
