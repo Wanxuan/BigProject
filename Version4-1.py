@@ -1,9 +1,12 @@
 import pickle
 
 pkl_file = open('train_model.pkl', 'rb')
-model = pickle.load(pkl_file)
 X_test = pickle.load(pkl_file)
 y_test = pickle.load(pkl_file)
+
+#读取model  
+model = model_from_json(open('my_model.json').read())  
+model.load_weights('my_model_weights.h5')
 
 def get_result(result):
     # 将 one_hot 编码解码
