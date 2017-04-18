@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import os, glob
+import os
 import zipfile
 import pickle
 from PIL import Image
@@ -53,16 +53,15 @@ def dataset_size():
     return size
 
 def load_image(folder):
-    
-    num_imgs = len(os.listdir('./'+folder))
-    data = np.zeros((num_imgs, img_height, img_width, 3), dtype='uint8')
-    label = np.zeros((num_imgs,), dtype="uint8")
-    path = os.path.join(folder, '*.jpg')
-    files = glob.glob(path)
-    for i in range(num_imgs):  
-        img = Image.open(files[i])
+
+    imgs = [i for i in os.listdir(folder)]
+    num = len(imgs)
+    data = np.zeros((num, img_height, img_width, 3), dtype='uint8')
+    label = np.zeros((num,), dtype="uint8")
+    for i in range(num):
+        img = Image.open(folder+"/"+imgs[i])
         data[i,:,:,:] = np.asarray(img, dtype="uint8")
-    label = int(folder.split("c")[1])           
+    label += int(folder.split("c")[1])           
     return data, label
     
 def merge_folder(folders):
