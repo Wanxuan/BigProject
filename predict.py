@@ -4,9 +4,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import model_from_json
 
-pkl_file = open('test.pkl', 'rb')
-X_test = pickle.load(pkl_file)
-y_test = pickle.load(pkl_file)
+pkl_file = open('dataset.pkl', 'rb')
+X_train, X_test, y_train, y_test = pickle.load(pkl_file)
 
 img_width = 640
 img_height = 480
