@@ -1,8 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
 import os, pickle, cv2
-from PIL import Image
-
 
 img_row = 24
 img_col = 32
