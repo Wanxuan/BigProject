@@ -16,7 +16,7 @@ nb_epoch = 1
 np.random.seed(133)
 
 pkl_file = open('dataset.pkl', 'rb')
-X_train, y_train, X_test, y_test = pickle.load(pkl_file)
+X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
