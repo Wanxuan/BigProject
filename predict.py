@@ -1,6 +1,3 @@
-%%matplotlib inline
-%%config InlineBackend.figure_format = 'retina'
-
 import pickle
 import random
 import numpy as np
