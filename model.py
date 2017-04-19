@@ -11,8 +11,8 @@ from keras.layers import Conv2D, MaxPooling2D
 img_rows = 24
 img_cols = 32
 num_classes = 10
-batch_size = 32
-nb_epoch = 10
+batch_size = 128
+nb_epoch = 3
 np.random.seed(133)
 
 pkl_file = open('dataset.pkl', 'rb')
