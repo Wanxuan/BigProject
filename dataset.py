@@ -65,12 +65,19 @@ def read_train_data():
     if not os.path.isfile(cache_path):
         train, target = load_train(img_rows, img_cols, color_type)
         X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
+        X_train = np.array(X_train, dtype=np.uint8)
+        y_train = np.array(y_train, dtype=np.uint8)
+        X_train = X_train.reshape(X_train.shape[0], color_type, img_rows, img_cols)
+        X_test = np.array(X_test, dtype=np.uint8)
+        X_test = np.array(X_test, dtype=np.uint8)
+        X_test = X_train.reshape(X_test.shape[0], color_type, img_rows, img_cols)
         y_train = np_utils.to_categorical(y_train, num_classes)
         y_test = np_utils.to_categorical(y_test, num_classes)
         cache_data((X_train, X_test, y_train, y_test), cache_path)
     else:
         print('Restore train from cache!')
         (X_train, X_test, y_train, y_test) = restore_data(cache_path)
+        
     print('Train shape:', X_train.shape)
     print('Test shape:', X_test.shape)
     return X_train, X_test, y_train, y_test
