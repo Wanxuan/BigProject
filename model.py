@@ -1,10 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-import zipfile
-import pickle
+import os, zipfile, pickle, h5py, cv2
 from PIL import Image
-import h5py 
+
 
 import keras
 from keras.utils import np_utils
@@ -14,8 +12,10 @@ from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from sklearn.model_selection import train_test_split
 
-img_height = 480
-img_width = 640
+img_row = 24
+img_col = 32
+color_type = 1 
+
 num_classes = 10
 batch_size = 32
 nb_epoch = 1
@@ -52,31 +52,57 @@ def dataset_size():
     print(size)
     return size
 
-def load_image(folder):
+def get_im_cv2(path, img_rows, img_cols, color_type=1):
+    # Load as grayscale
+    if color_type == 1:
+        img = cv2.imread(path, 0)
+    elif color_type == 3:
+        img = cv2.imread(path)
+    # Reduce size
+    resized = cv2.resize(img, (img_cols, img_rows))
+    return resized
 
-    imgs = [i for i in os.listdir(folder)]
-    num = len(imgs)
-    data = np.zeros((num, img_height, img_width, 3), dtype='uint8')
-    label = np.zeros((num,), dtype="uint8")
-    for i in range(num):
-        img = Image.open(folder+"/"+imgs[i])
-        data[i,:,:,:] = np.asarray(img, dtype="uint8")
-    label += int(folder.split("c")[1])           
-    return data, label
+def load_train(img_rows, img_cols, color_type=1):
+
+    X_train = []
+    y_train = []
+    print('Read train images')
+    for j in range(10):
+        print('Load folder c{}'.format(j))
+        path = os.path.join('train', 'c' + str(j), '*.jpg')
+        files = glob.glob(path)
+        for fl in files:
+            flbase = os.path.basename(fl)
+            img = get_im_cv2(fl, img_rows, img_cols, color_type)
+            X_train.append(img)
+            y_train.append(j)
+    return X_train, y_train
+
+# def load_image(folder):
+
+#     imgs = [i for i in os.listdir(folder)]
+#     num = len(imgs)
+#     data = np.zeros((num, img_rows, img_cols, color_type), dtype='uint8')
+#     label = np.zeros((num,), dtype="uint8")
+#     for i in range(num):
+#         img = Image.open(folder+"/"+imgs[i])
+#         data[i,:,:,:] = np.asarray(img, dtype="uint8")
+#     label += int(folder.split("c")[1])           
+#     return data, label
     
-def merge_folder(folders):
+# def merge_folder(folders):
     
-    x_train = np.zeros((num_train, img_height, img_width, 3), dtype='uint8')
-    y_train = np.zeros((num_train,), dtype="uint8")
-    folders_size = 0
-    for f in folders:
-        print(f)
-        data, label = load_image(f)
-        folder_size = data.shape[0]
-        folders_size += folder_size
-        x_train[folders_size-folder_size:folders_size,:,:,:] = data
-        y_train[folders_size-folder_size:folders_size] = label
-    return x_train, y_train
+#     x_train = np.zeros((num_train, img_rows, img_cols, color_type), dtype='uint8')
+#     y_train = np.zeros((num_train,), dtype="uint8")
+#     folders_size = 0
+#     for f in folders:
+#         print(f)
+#         data, label = load_image(f)
+#         folder_size = data.shape[0]
+#         folders_size += folder_size
+#         x_train[folders_size-folder_size:folders_size,:,:,:] = data
+#         y_train[folders_size-folder_size:folders_size] = label
+#     return x_train, y_train
 
 def split_validation_set(train, target, test_size):
     random_state = 51
@@ -118,7 +144,7 @@ def read_train_data():
     return X_train, X_test, y_train, y_test
     
 folders = maybe_extract(filename)
-num_train = dataset_size()
+# num_train = dataset_size()
 X_train, X_test, y_train, y_test = read_train_data()
     
 model = Sequential()
