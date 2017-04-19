@@ -31,7 +31,7 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
 model.add(Conv2D(128, 3, 3, activation='relu', border_mode='same'))
-model.add(MaxPooling2D(pool_size=(8, 8)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
 model.add(Flatten())
