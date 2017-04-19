@@ -1,6 +1,8 @@
 import numpy as np
 import os, pickle, cv2, glob
 from sklearn.model_selection import train_test_split
+import keras
+from keras.utils import np_utils
 
 img_rows = 24
 img_cols = 32
