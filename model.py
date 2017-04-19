@@ -18,22 +18,15 @@ X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, activation='relu', border_mode='same', input_shape=X_train.shape[1:]))
-model.add(Conv2D(32, 3, 3, activation='relu'))
+model.add(Conv2D(8, 2, 2, activation='relu', border_mode='valid', input_shape=X_train.shape[1:]))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
 
-model.add(Conv2D(64, 3, 3, activation='relu', border_mode='same'))
-model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(Conv2D(8, 2, 2 activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
-
-model.add(Conv2D(128, 3, 3, activation='relu', border_mode='same'))
-model.add(MaxPooling2D(pool_size=(8, 8)))
-model.add(Dropout(0.5))
+model.add(Dropout(0.25))
 
 model.add(Flatten())
-model.add(Dense(512))
+model.add(Dense(128))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes))
