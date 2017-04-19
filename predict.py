@@ -4,14 +4,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import model_from_json
 
+%matplotlib inline
+%config InlineBackend.figure_format = 'retina'
+
 pkl_file = open('dataset.pkl', 'rb')
 X_train, X_test, y_train, y_test = pickle.load(pkl_file)
 
-img_width = 640
-img_height = 480
 #读取model  
-model = model_from_json(open('my_model.json').read())  
-model.load_weights('my_model_weights.h5')
+model = model_from_json(open('2_model.json').read())  
+model.load_weights('2_model_weights.h5')
 
 def get_result(result):
     # 将 one_hot 编码解码
@@ -20,7 +21,7 @@ def get_result(result):
 
 n_test = X_test.shape[0]
 index = random.randint(0, n_test-1)
-y_pred = model.predict(X_test[index].reshape(1, img_height, img_width, 3))
+y_pred = model.predict(X_test[index])
 print(X_test[index])
 print(get_result(y_pred))
 
