@@ -1,14 +1,12 @@
 import numpy as np
 import h5py
 
-
 import keras
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
-from sklearn.model_selection import train_test_split
 
 num_classes = 10
 batch_size = 32
