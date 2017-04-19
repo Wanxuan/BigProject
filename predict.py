@@ -1,11 +1,11 @@
+%%matplotlib inline
+%%config InlineBackend.figure_format = 'retina'
+
 import pickle
 import random
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import model_from_json
-
-%matplotlib inline
-%config InlineBackend.figure_format = 'retina'
 
 pkl_file = open('dataset.pkl', 'rb')
 X_train, X_test, y_train, y_test = pickle.load(pkl_file)
