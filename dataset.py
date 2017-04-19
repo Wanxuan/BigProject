@@ -10,7 +10,6 @@ color_type = 3
 
 num_classes = 10
 batch_size = 32
-nb_epoch = 1
 np.random.seed(133)
 
 def get_im_cv2(path, img_rows, img_cols, color_type=3):
