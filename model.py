@@ -12,7 +12,7 @@ img_rows = 24
 img_cols = 32
 num_classes = 10
 batch_size = 32
-nb_epoch = 20
+nb_epoch = 10
 np.random.seed(133)
 
 pkl_file = open('dataset.pkl', 'rb')
