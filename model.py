@@ -21,11 +21,19 @@ X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, activation='relu', border_mode='valid', input_shape=(color_type, img_rows, img_cols)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
-model.add(Conv2D(64, 3, 3, activation='relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+nb_filters = 8
+# size of pooling area for max pooling
+nb_pool = 2
+# convolution kernel size
+nb_conv = 2
+model = Sequential()
+model.add(Conv2D(nb_filters, nb_conv, nb_conv,
+                        border_mode='valid',
+                        input_shape=(color_type, img_rows, img_cols)))
+model.add(Activation('relu'))
+model.add(Conv2D(nb_filters, nb_conv, nb_conv))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 model.add(Dropout(0.25))
 
 model.add(Flatten())
