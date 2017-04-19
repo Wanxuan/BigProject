@@ -58,7 +58,7 @@ def restore_data(path):
     return data
 
 def read_train_data():
-    cache_path = os.path.join('cache', 'train_w_' + str(img_width) + '_h_' + str(img_height) + '.dat')
+    cache_path = os.path.join('cache', 'train_w_' + str(img_row) + '_h_' + str(img_cols) + '.dat')
     if not os.path.isfile(cache_path):
         train, target = load_train(img_rows, img_cols, color_type)
         X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
