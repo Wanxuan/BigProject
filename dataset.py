@@ -4,16 +4,16 @@ from sklearn.model_selection import train_test_split
 import keras
 from keras.utils import np_utils
 
-img_rows = 24
-img_cols = 32
-color_type = 1 
+img_rows = 180
+img_cols = 240
+color_type = 3 
 
 num_classes = 10
 batch_size = 32
 nb_epoch = 1
 np.random.seed(133)
 
-def get_im_cv2(path, img_rows, img_cols, color_type=1):
+def get_im_cv2(path, img_rows, img_cols, color_type=3):
     # Load as grayscale
     if color_type == 1:
         img = cv2.imread(path, 0)
@@ -23,7 +23,7 @@ def get_im_cv2(path, img_rows, img_cols, color_type=1):
     resized = cv2.resize(img, (img_cols, img_rows))
     return resized
 
-def load_train(img_rows, img_cols, color_type=1):
+def load_train(img_rows, img_cols, color_type=3):
 
     X_train = []
     y_train = []
