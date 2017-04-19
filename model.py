@@ -21,7 +21,7 @@ model = Sequential()
 model.add(Conv2D(8, 2, 2, activation='relu', border_mode='valid', input_shape=X_train.shape[1:]))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(8, 2, 2 activation='relu'))
+model.add(Conv2D(8, 2, 2, activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
