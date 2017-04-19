@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import model_from_json
 
+img_rows = 24
+img_cols = 32
+
 pkl_file = open('dataset.pkl', 'rb')
 X_train, X_test, y_train, y_test = pickle.load(pkl_file)
 
@@ -18,7 +21,7 @@ def get_result(result):
 
 n_test = X_test.shape[0]
 index = random.randint(0, n_test-1)
-y_pred = model.predict(X_test[index])
+y_pred = model.predict(X_test[index].reshape(1, img_rows, img_cols, 1))
 print(X_test[index])
 print(get_result(y_pred))
 
