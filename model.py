@@ -10,7 +10,6 @@ from keras.layers import Conv2D, MaxPooling2D
 
 img_rows = 24
 img_cols = 32
-color_type = 1 
 num_classes = 10
 batch_size = 32
 nb_epoch = 1
@@ -29,7 +28,7 @@ nb_conv = 2
 model = Sequential()
 model.add(Conv2D(nb_filters, nb_conv, nb_conv,
                         border_mode='valid',
-                        input_shape=(color_type, img_rows, img_cols)))
+                        input_shape=(img_rows, img_cols, 1)))
 model.add(Activation('relu'))
 model.add(Conv2D(nb_filters, nb_conv, nb_conv))
 model.add(Activation('relu'))
