@@ -8,6 +8,9 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
+img_rows = 24
+img_cols = 32
+color_type = 1 
 num_classes = 10
 batch_size = 32
 nb_epoch = 1
@@ -18,7 +21,7 @@ X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, activation='relu', border_mode='valid', input_shape=X_train.shape[1:]))
+model.add(Conv2D(32, 3, 3, activation='relu', border_mode='valid', input_shape=(color_type, img_rows, img_cols)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
 model.add(Conv2D(64, 3, 3, activation='relu'))
