@@ -8,8 +8,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
-img_rows = 24
-img_cols = 32
+img_rows = 180
+img_cols = 240
 num_classes = 10
 batch_size = 128
 nb_epoch = 3
@@ -54,5 +54,5 @@ model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
 
 
 json_string = model.to_json()  
-open('2_model.json','w').write(json_string)  
-model.save_weights('2_model_weights.h5')
+open('3_model.json','w').write(json_string)  
+model.save_weights('3_model_weights.h5')
