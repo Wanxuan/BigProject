@@ -70,7 +70,7 @@ def read_train_data():
         X_train = X_train.reshape(X_train.shape[0], color_type, img_rows, img_cols)
         X_test = np.array(X_test, dtype=np.uint8)
         X_test = np.array(X_test, dtype=np.uint8)
-        X_test = X_train.reshape(X_test.shape[0], color_type, img_rows, img_cols)
+        X_test = X_test.reshape(X_test.shape[0], color_type, img_rows, img_cols)
         y_train = np_utils.to_categorical(y_train, num_classes)
         y_test = np_utils.to_categorical(y_test, num_classes)
         cache_data((X_train, X_test, y_train, y_test), cache_path)
