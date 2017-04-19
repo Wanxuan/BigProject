@@ -1,8 +1,8 @@
 import numpy as np
 import os, pickle, cv2
 
-img_row = 24
-img_col = 32
+img_rows = 24
+img_cols = 32
 color_type = 1 
 
 num_classes = 10
@@ -58,7 +58,7 @@ def restore_data(path):
     return data
 
 def read_train_data():
-    cache_path = os.path.join('cache', 'train_w_' + str(img_row) + '_h_' + str(img_cols) + '.dat')
+    cache_path = os.path.join('cache', 'train_w_' + str(img_rows) + '_h_' + str(img_cols) + '.dat')
     if not os.path.isfile(cache_path):
         train, target = load_train(img_rows, img_cols, color_type)
         X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
