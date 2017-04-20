@@ -57,7 +57,7 @@ train_generator = train_datagen.flow(X_train, y_train, batch_size=128)
 validation_generator = test_datagen.flow(X_test, y_test, batch_size=128)
 
 model.fit_generator(train_generator, samples_per_epoch=2000, nb_epoch=50, 
-                    validation_data=validation_generator, validation_steps=400)
+                    validation_data=validation_generator, nb_val_samples=400)
 # model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
 #           verbose=1, validation_data=(X_test, y_test))
 
