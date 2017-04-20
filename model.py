@@ -8,11 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
-img_rows = 180
-img_cols = 240
 num_classes = 10
-batch_size = 128
-nb_epoch = 3
 np.random.seed(133)
 
 pkl_file = open('dataset.pkl', 'rb')
@@ -48,10 +44,26 @@ model.compile(optimizer='adadelta',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
-          verbose=1, validation_data=(X_test, y_test))
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
 
+test_datagen = ImageDataGenerator(rescale=1./255)
 
-json_string = model.to_json()  
-open('3_model.json','w').write(json_string)  
-model.save_weights('3_model_weights.h5')
+train_generator = train_datagen.flow(X_train, y_train, batch_size=128)
+
+validation_generator = test_datagen.flow(X_test, y_test, batch_size=128)
+
+model.fit_generator(train_generator, steps_per_epoch=2000, epochs=50, 
+                    validation_data=validation_generator, validation_steps=400)
+# model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
+#           verbose=1, validation_data=(X_test, y_test))
+
+# json_string = model.to_json()  
+# open('gen_model.json','w').write(json_string)  
+# model.save_weights('gen_model_weights.h5')
+model.save_weights('gen_model.h5')
+with open('gen_model.json', 'w') as f:
+    f.write(model.to_json())
