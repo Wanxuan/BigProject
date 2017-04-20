@@ -8,6 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
+batch_size = 32
 num_classes = 10
 np.random.seed(133)
 
@@ -52,9 +53,9 @@ train_datagen = ImageDataGenerator(
 
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow(X_train, y_train, batch_size=32)
+train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 
-validation_generator = test_datagen.flow(X_test, y_test, batch_size=32)
+validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0] // batch_size, 
                     nb_epoch=50, validation_data=validation_generator)
