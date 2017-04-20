@@ -17,23 +17,19 @@ X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3, border_mode='same',
-                 input_shape=X_train.shape[1:]))
+model.add(Conv2D(32, 3, 3,input_shape=X_train.shape[1:]))             
 model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+
 model.add(Conv2D(32, 3, 3))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
 
-model.add(Conv2D(64, 3, 3, border_mode='same'))
-model.add(Activation('relu'))
 model.add(Conv2D(64, 3, 3))
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
 
 model.add(Flatten())
-model.add(Dense(512))
+model.add(Dense(64))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes))
@@ -57,15 +53,15 @@ train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 
 validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
-model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0] // batch_size, 
-                    nb_epoch=50, validation_data=validation_generator, 
-                    nb_val_samples=X_test.shape[0] // batch_size)
+model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], 
+                    nb_epoch=10, validation_data=validation_generator, 
+                    nb_val_samples=X_test.shape[0])
 # model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
 #           verbose=1, validation_data=(X_test, y_test))
 
 # json_string = model.to_json()  
 # open('gen_model.json','w').write(json_string)  
 # model.save_weights('gen_model_weights.h5')
-model.save_weights('gen_model.h5')
-with open('gen_model.json', 'w') as f:
+model.save_weights('small_model.h5')
+with open('small_model.json', 'w') as f:
     f.write(model.to_json())
