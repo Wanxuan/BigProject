@@ -4,8 +4,8 @@ from sklearn.model_selection import train_test_split
 import keras
 from keras.utils import np_utils
 
-img_rows = 180
-img_cols = 240
+img_rows = 240
+img_cols = 320
 color_type = 3 
 
 num_classes = 10
