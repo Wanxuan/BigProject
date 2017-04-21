@@ -48,7 +48,7 @@ print('Model loaded.')
 model.summary()
 
 model = Sequential()
-model.add(Flatten(input_shape=train_data.shape[1:]))
+model.add(Flatten(input_shape=X_train.shape[1:]))
 model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='softmax'))
