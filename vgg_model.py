@@ -61,7 +61,7 @@ model.add(Dropout(0.5))
 model.add(Dense(10, activation='softmax'))
 
 sgd = keras.optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(optimizer=sgd, loss='categorical_crossentropy')
+model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
 
 
 train_datagen = ImageDataGenerator(
@@ -75,7 +75,7 @@ validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 
 model.fit_generator(train_generator, samples_per_epoch=2000, 
-                    nb_epoch=50, validation_data=validation_generator, 
+                    nb_epoch=10, validation_data=validation_generator, 
                     nb_val_samples=800)
 score = model.evaluate(X_test, y_test, batch_size=32, verbose=1, sample_weight=None)
 print(score)
