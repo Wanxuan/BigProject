@@ -52,9 +52,9 @@ model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0]//batch_size, 
-                    nb_epoch=200, validation_data=validation_generator, 
-                    nb_val_samples=X_test.shape[0]//batch_size)
+model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], 
+                    nb_epoch=20, validation_data=validation_generator, 
+                    nb_val_samples=X_test.shape[0])
 model.evaluate(X_test, y_test, batch_size=32, verbose=1, sample_weight=None)
 
 # json_string = model.to_json()  
