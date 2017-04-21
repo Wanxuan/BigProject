@@ -51,7 +51,7 @@ model = Sequential()
 model.add(Flatten(input_shape=X_train.shape[1:]))
 model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(1, activation='softmax'))
+model.add(Dense(10, activation='softmax'))
 
 # opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 # model.compile(optimizer=opt,
