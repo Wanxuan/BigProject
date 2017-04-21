@@ -18,74 +18,45 @@ X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
-# model.add(Conv2D(32, 3, 3,input_shape=X_train.shape[1:]))             
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(32, 3, 3,input_shape=X_train.shape[1:]))             
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# model.add(Conv2D(32, 3, 3))
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(32, 3, 3))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# model.add(Conv2D(64, 3, 3))
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(64, 3, 3))
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# model.add(Flatten())
-# model.add(Dense(64))
-# model.add(Activation('relu'))
-# model.add(Dropout(0.5))
-# model.add(Dense(num_classes))
-# model.add(Activation('softmax'))
-
-from scipy.misc import imsave
-from keras.applications import vgg16
-from keras import backend as K
-
-# build the VGG16 network with ImageNet weights
-model = vgg16.VGG16(weights='imagenet', include_top=False)
-print('Model loaded.')
-
-model.summary()
-
-model = Sequential()
-model.add(Flatten(input_shape=X_train.shape[1:]))
-model.add(Dense(256, activation='relu'))
+model.add(Flatten())
+model.add(Dense(64))
+model.add(Activation('relu'))
 model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
-
-# opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
-# model.compile(optimizer=opt,
-#               loss='categorical_crossentropy',
-#               metrics=['accuracy'])
+model.add(Dense(num_classes))
+model.add(Activation('softmax'))
 
 train_datagen = ImageDataGenerator(
         rescale=1./255,
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True)
-
 test_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
-
 validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
-
-# model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], 
-#                     nb_epoch=10, validation_data=validation_generator, 
-#                     nb_val_samples=X_test.shape[0])
-# model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
-#           verbose=1, validation_data=(X_test, y_test))
 
 model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], nb_epoch=50, 
+model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], nb_epoch=25, 
                     validation_data=validation_generator, nb_val_samples=X_test.shape[0])
 
 # json_string = model.to_json()  
 # open('gen_model.json','w').write(json_string)  
 # model.save_weights('gen_model_weights.h5')
-model.save_weights('bottleneck_fc_model.h5')
-with open('bottleneck_fc_model.json', 'w') as f:
+model.save_weights('e25_model.h5')
+with open('e25_model.json', 'w') as f:
     f.write(model.to_json())
