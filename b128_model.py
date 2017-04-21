@@ -8,7 +8,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
-batch_size = 32
+batch_size = 128
 num_classes = 10
 np.random.seed(133)
 
@@ -53,12 +53,12 @@ train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 
-model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0]//batch_size, 
-                    nb_epoch=200, validation_data=validation_generator, 
+model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], 
+                    nb_epoch=20, validation_data=validation_generator, 
                     nb_val_samples=X_test.shape[0])
-score = model.evaluate(X_test, y_test, batch_size=32, verbose=1, sample_weight=None)
+score = model.evaluate(X_test, y_test, batch_size=128, verbose=1, sample_weight=None)
 print(score)
 
-model.save_weights('e200_model.h5')
-with open('e200_model.json', 'w') as f:
+model.save_weights('b128_model.h5')
+with open('b128_model.json', 'w') as f:
     f.write(model.to_json())
