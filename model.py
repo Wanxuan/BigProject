@@ -17,26 +17,43 @@ X_train, X_test, y_train, y_test = pickle.load(pkl_file)
     
 model = Sequential()
 
-model.add(Conv2D(32, 3, 3,input_shape=X_train.shape[1:]))             
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+# model.add(Conv2D(32, 3, 3,input_shape=X_train.shape[1:]))             
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(32, 3, 3))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+# model.add(Conv2D(32, 3, 3))
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(64, 3, 3))
-model.add(Activation('relu'))
+# model.add(Conv2D(64, 3, 3))
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+
+# model.add(Flatten())
+# model.add(Dense(64))
+# model.add(Activation('relu'))
+# model.add(Dropout(0.5))
+# model.add(Dense(num_classes))
+# model.add(Activation('softmax'))
+
+model.add(Conv2D(32, (3, 3), activation='relu', input_shape=X_train.shape[1:]))
+model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
 
 model.add(Flatten())
-model.add(Dense(64))
-model.add(Activation('relu'))
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(num_classes))
-model.add(Activation('softmax'))
+model.add(Dense(10, activation='softmax'))
 
-opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
+opt = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+# model.compile(loss='categorical_crossentropy', optimizer=sgd)
+# opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 
 model.compile(optimizer=opt,
               loss='categorical_crossentropy',
@@ -63,6 +80,6 @@ model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0],
 # json_string = model.to_json()  
 # open('gen_model.json','w').write(json_string)  
 # model.save_weights('gen_model_weights.h5')
-model.save_weights('small_model.h5')
-with open('small_model.json', 'w') as f:
+model.save_weights('vgg_model.h5')
+with open('vgg_model.json', 'w') as f:
     f.write(model.to_json())
