@@ -6,7 +6,7 @@ from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
+from keras.layers import Conv2D, MaxPooling2D
 
 batch_size = 32
 num_classes = 10
@@ -40,7 +40,7 @@ model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
-model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
 
 train_datagen = ImageDataGenerator(
