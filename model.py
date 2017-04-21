@@ -36,13 +36,13 @@ model = Sequential()
 # model.add(Dense(num_classes))
 # model.add(Activation('softmax'))
 
-model.add(Conv2D(32, (3, 3), activation='relu', input_shape=X_train.shape[1:]))
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(32, 3, 3, activation='relu', input_shape=X_train.shape[1:]))
+model.add(Conv2D(32, 3, 3, activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(Conv2D(64, 3, 3, activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
