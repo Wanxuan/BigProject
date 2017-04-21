@@ -80,8 +80,8 @@ model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-model.fit_generator(train_generator, steps_per_epoch=X_train.shape[0], epochs=50, 
-                    validation_data=validation_generator, validation_steps=X_test.shape[0])
+model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], nb_epoch=50, 
+                    validation_data=validation_generator, nb_val_samples=X_test.shape[0])
 
 # json_string = model.to_json()  
 # open('gen_model.json','w').write(json_string)  
