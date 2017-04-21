@@ -50,7 +50,7 @@ validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 # initiate RMSprop optimizer
 # opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
-opt = keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)
+opt = keras.optimizers.SGD(lr=0.1, momentum=0.0, decay=0.0, nesterov=False)
 model.compile(optimizer=opt,
               loss='categorical_crossentropy',
               metrics=['accuracy'])
