@@ -53,36 +53,35 @@ model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='softmax'))
 
-model.compile(optimizer='rmsprop',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
-
-model.fit_generator(train_generator, steps_per_epoch=X_train.shape[0], epochs=50, 
-                    validation_data=validation_generator, validation_steps=X_test.shape[0])
-
 # opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
-
 # model.compile(optimizer=opt,
 #               loss='categorical_crossentropy',
 #               metrics=['accuracy'])
 
-# train_datagen = ImageDataGenerator(
-#         rescale=1./255,
-#         shear_range=0.2,
-#         zoom_range=0.2,
-#         horizontal_flip=True)
+train_datagen = ImageDataGenerator(
+        rescale=1./255,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
 
-# test_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(rescale=1./255)
 
-# train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
+train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
 
-# validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
+validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 # model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], 
 #                     nb_epoch=10, validation_data=validation_generator, 
 #                     nb_val_samples=X_test.shape[0])
 # model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, 
 #           verbose=1, validation_data=(X_test, y_test))
+
+model.compile(optimizer='rmsprop',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit_generator(train_generator, steps_per_epoch=X_train.shape[0], epochs=50, 
+                    validation_data=validation_generator, validation_steps=X_test.shape[0])
 
 # json_string = model.to_json()  
 # open('gen_model.json','w').write(json_string)  
