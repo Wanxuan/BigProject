@@ -40,22 +40,22 @@ model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 train_datagen = ImageDataGenerator(
-#         rescale=1./255,
-        width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
+        rescale=1./255,
+        width_shift_range=0.1,  
         height_shift_range=0.1,
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True)
-# test_datagen = ImageDataGenerator(rescale=1./255)
+test_datagen = ImageDataGenerator(rescale=1./255)
 train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
-# validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
+validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
 
 model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
 model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0], 
-                    nb_epoch=20, validation_data=(X_test, y_test), 
+                    nb_epoch=20, validation_data=validation_generator, 
                     nb_val_samples=X_test.shape[0])
 model.evaluate(X_test, y_test, batch_size=32, verbose=1, sample_weight=None)
 
