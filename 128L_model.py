@@ -37,7 +37,7 @@ model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, 3, 3, border_mode='same'))
+model.add(Conv2D(128, 3, 3, border_mode='same'))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
@@ -69,6 +69,6 @@ model.fit_generator(train_generator, samples_per_epoch=X_train.shape[0],
 score = model.evaluate(X_test, y_test, batch_size=32, verbose=1, sample_weight=None)
 print(score)
 
-model.save_weights('64L_model.h5')
-with open('64L_model.json', 'w') as f:
+model.save_weights('128L_model.h5')
+with open('128L_model.json', 'w') as f:
     f.write(model.to_json())
