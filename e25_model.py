@@ -12,8 +12,10 @@ batch_size = 32
 num_classes = 10
 np.random.seed(133)
 
-pkl_file = open('dataset.pkl', 'rb')
-X_train, X_test, y_train, y_test = pickle.load(pkl_file)
+train_file = open('train.pkl', 'rb')
+X_train, y_train = pickle.load(train_file)
+test_file = open('test.pkl', 'rb')
+X_test, y_test = pickle.load(test_file)
     
 model = Sequential()
 
