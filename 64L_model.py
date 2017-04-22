@@ -1,6 +1,8 @@
 '''
 It gets down to 0.44 test logloss in 10 epochs, and down to 0.33 after 20 epochs.
 It gets 90.33% accuracy in 20 epochs and does not change too much after 20 epochs.
+cifar_10模型的基础上加两层model.add(Conv2D(64, 3, 3))跑25次，loss达到0.31，acc达到91%。
+cifar_10模型跑15次就差不多没什么大变化了，15次loss是0.429，acc0.872；20次loss0.401，acc是0.884
 '''
 
 import numpy as np
