@@ -63,6 +63,10 @@ def read_train_data():
 X_train, X_test, y_train, y_test = read_train_data()
 
 
-dataset = open('dataset.pkl', 'wb')
-pickle.dump((X_train, X_test, y_train, y_test), dataset)
-dataset.close()
+train = open('train.pkl', 'wb')
+pickle.dump((X_train, y_train), train)
+train.close()
+test = open('test.pkl', 'wb')
+pickle.dump((X_test, y_test), test)
+test.close()
+
