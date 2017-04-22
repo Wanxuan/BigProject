@@ -4,8 +4,8 @@ from sklearn.model_selection import train_test_split
 import keras
 from keras.utils import np_utils
 
-img_rows = 480
-img_cols = 640
+img_rows = 240
+img_cols = 320
 color_type = 3 
 
 num_classes = 10
@@ -63,10 +63,6 @@ def read_train_data():
 X_train, X_test, y_train, y_test = read_train_data()
 
 
-train = open('train.pkl', 'wb')
-pickle.dump((X_train, y_train), train)
+dataset = open('dataset.pkl', 'wb')
+pickle.dump((X_train, y_train, X_test, y_test), dataset)
 train.close()
-test = open('test.pkl', 'wb')
-pickle.dump((X_test, y_test), test)
-test.close()
-
