@@ -65,4 +65,4 @@ X_train, X_test, y_train, y_test = read_train_data()
 
 dataset = open('dataset.pkl', 'wb')
 pickle.dump((X_train, y_train, X_test, y_test), dataset)
-train.close()
+dataset.close()
