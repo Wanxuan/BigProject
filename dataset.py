@@ -91,9 +91,12 @@ def read_and_normalize_train_data():
 X_train, X_test, y_train, y_test, driver_id, unique_drivers = read_and_normalize_train_data()
     
     
-train = open('train.pkl', 'wb')
-pickle.dump((X_train, y_train, driver_id, unique_drivers), train)
-train.close()
+train_data = open('train_data.pkl', 'wb')
+pickle.dump((X_train), train_data)
+train_data.close()
+train_label = open('train_label.pkl', 'wb')
+pickle.dump((y_train, driver_id, unique_drivers), train_label)
+train_label.close()
 
 test = open('test.pkl', 'wb')
 pickle.dump((X_test, y_test), test)
