@@ -1,5 +1,5 @@
 import numpy as np
-import os, pickle, cv2, glob
+import os, pickle, cv2, glob, h5py
 from sklearn.model_selection import train_test_split
 import keras
 from keras.utils import np_utils
@@ -91,13 +91,23 @@ def read_and_normalize_train_data():
 X_train, X_test, y_train, y_test, driver_id, unique_drivers = read_and_normalize_train_data()
     
     
-train_data = open('train_data.pkl', 'wb')
-pickle.dump((X_train), train_data)
-train_data.close()
-train_label = open('train_label.pkl', 'wb')
-pickle.dump((y_train, driver_id, unique_drivers), train_label)
-train_label.close()
+train = h5py.File('train.h5', 'w')
+train.create_dataset('data', data=X_train, compression="gzip")
+train.create_dataset('label', data=y_train, compression="gzip")
+train.create_dataset('driver_id', data=driver_id, compression="gzip")
+train.create_dataset('unique_drivers', data=unique_drivers, compression="gzip")
+train.close()
 
-test = open('test.pkl', 'wb')
-pickle.dump((X_test, y_test), test)
+test = h5py.File('test.h5', 'w')
+test.create_dataset('X_test', data=X_test, compression="gzip")
+test.create_dataset('y_test', data=y_test, compression="gzip")
 test.close()
+# pickle.dump((X_train), train_data)
+# train_data.close()
+# train_label = open('train_label.pkl', 'wb')
+# pickle.dump((y_train, driver_id, unique_drivers), train_label)
+# train_label.close()
+
+# test = open('test.pkl', 'wb')
+# pickle.dump((X_test, y_test), test)
+# test.close()
