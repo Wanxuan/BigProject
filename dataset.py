@@ -21,11 +21,29 @@ def get_im_cv2(path, img_rows, img_cols, color_type=3):
     resized = cv2.resize(img, (img_cols, img_rows))
     return resized
 
+def get_driver_data():
+    dr = dict()
+    path = os.path.join('driver_imgs_list.csv')
+    print('Read drivers data')
+    file = open(path, 'r')
+    line = file.readline()
+    while (1):
+        line = file.readline()
+        if line == '':
+            break
+        arr = line.strip().split(',')
+        dr[arr[2]] = arr[0]
+    file.close()
+    return dr
+
 def load_train(img_rows, img_cols, color_type=3):
 
     X_train = []
     y_train = []
+    driver_id = []
+    driver_data = get_driver_data()
     print('Read train images')
+    
     for j in range(10):
         print('Load folder c{}'.format(j))
         path = os.path.join('train', 'c' + str(j), '*.jpg')
@@ -35,7 +53,12 @@ def load_train(img_rows, img_cols, color_type=3):
             img = get_im_cv2(fl, img_rows, img_cols, color_type)
             X_train.append(img)
             y_train.append(j)
-    return X_train, y_train
+            driver_id.append(driver_data[flbase])
+
+    unique_drivers = sorted(list(set(driver_id)))
+    print('Unique drivers: {}'.format(len(unique_drivers)))
+    print(unique_drivers)
+    return X_train, y_train, driver_id, unique_drivers
 
 def split_validation_set(train, target, test_size):
     random_state = 51
@@ -43,10 +66,10 @@ def split_validation_set(train, target, test_size):
         train, target, test_size=test_size, random_state=random_state)
     return X_train, X_test, y_train, y_test
 
-def read_train_data():
+def read_and_normalize_train_data():
 
-    train, target = load_train(img_rows, img_cols, color_type)
-    X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.2)
+    train, target, driver_id, unique_drivers = load_train(img_rows, img_cols, color_type)
+    X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.3)
     X_train = np.array(X_train, dtype=np.uint8)
     y_train = np.array(y_train, dtype=np.uint8)
     X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, color_type)
@@ -55,14 +78,23 @@ def read_train_data():
     X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, color_type)
     y_train = np_utils.to_categorical(y_train, num_classes)
     y_test = np_utils.to_categorical(y_test, num_classes)
-        
+    
+    X_train = X_train.astype('float32')
+    X_train /= 255
+    X_test = X_test.astype('float32')
+    X_test /= 255
+
     print('Train shape:', X_train.shape)
     print('Test shape:', X_test.shape)
-    return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test, driver_id, unique_drivers
+
+X_train, X_test, y_train, y_test, driver_id, unique_drivers = read_and_normalize_train_data()
     
-X_train, X_test, y_train, y_test = read_train_data()
+    
+train = open('train.pkl', 'wb')
+pickle.dump((X_train, y_train, driver_id, unique_drivers), train)
+train.close()
 
-
-dataset = open('dataset.pkl', 'wb')
-pickle.dump((X_train, y_train, X_test, y_test), dataset)
-dataset.close()
+test = open('test.pkl', 'wb')
+pickle.dump((X_test, y_test), test)
+test.close()
