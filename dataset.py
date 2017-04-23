@@ -94,19 +94,16 @@ X_train, X_test, y_train, y_test, driver_id, unique_drivers = read_and_normalize
 train = h5py.File('train.h5', 'w')
 train.create_dataset('data', data=X_train, compression="gzip")
 train.create_dataset('label', data=y_train, compression="gzip")
-train.create_dataset('driver_id', data=driver_id, compression="gzip")
-train.create_dataset('unique_drivers', data=unique_drivers, compression="gzip")
 train.close()
 
 test = h5py.File('test.h5', 'w')
 test.create_dataset('X_test', data=X_test, compression="gzip")
 test.create_dataset('y_test', data=y_test, compression="gzip")
 test.close()
-# pickle.dump((X_train), train_data)
-# train_data.close()
-# train_label = open('train_label.pkl', 'wb')
-# pickle.dump((y_train, driver_id, unique_drivers), train_label)
-# train_label.close()
+
+driver = open('driver.pkl', 'wb')
+pickle.dump((driver_id, unique_drivers), driver)
+driver.close()
 
 # test = open('test.pkl', 'wb')
 # pickle.dump((X_test, y_test), test)
