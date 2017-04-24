@@ -87,38 +87,28 @@ model.add(Activation('softmax'))
 opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
-# train_datagen = ImageDataGenerator(
-#         rescale=1./255,
-#         shear_range=0.2,
-#         zoom_range=0.2,
-#         horizontal_flip=True)
-# test_datagen = ImageDataGenerator(rescale=1./255)
-# train_generator = train_datagen.flow(X_train, y_train, batch_size=batch_size)
-# validation_generator = test_datagen.flow(X_test, y_test, batch_size=batch_size)
+# datagen = ImageDataGenerator(
+#     featurewise_center=False,  # set input mean to 0 over the dataset
+#     samplewise_center=False,  # set each sample mean to 0
+#     featurewise_std_normalization=False,  # divide inputs by std of the dataset
+#     samplewise_std_normalization=False,  # divide each input by its std
+#     zca_whitening=False,  # apply ZCA whitening
+#     rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
+#     width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
+#     height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
+#     horizontal_flip=True,  # randomly flip images
+#     vertical_flip=False)  # randomly flip images
 
-datagen = ImageDataGenerator(
-    featurewise_center=False,  # set input mean to 0 over the dataset
-    samplewise_center=False,  # set each sample mean to 0
-    featurewise_std_normalization=False,  # divide inputs by std of the dataset
-    samplewise_std_normalization=False,  # divide each input by its std
-    zca_whitening=False,  # apply ZCA whitening
-    rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-    width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
-    height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
-    horizontal_flip=True,  # randomly flip images
-    vertical_flip=False)  # randomly flip images
-
-datagen.fit(x_train)
+# datagen.fit(x_train)
     
-model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0], 
-                    nb_epoch=20, validation_data=(x_val, y_val), 
-                    nb_val_samples=x_val.shape[0])
+# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+#                     samples_per_epoch=x_train.shape[0], 
+#                     nb_epoch=20, validation_data=(x_val, y_val), 
+#                     nb_val_samples=x_val.shape[0])
 
-model.save_weights('new_model.h5')
-with open('new_model.json', 'w') as f:
+model.fit(x_train, y_train, batch_size=batch_size, 
+          nb_epoch=200, verbose=1, validation_split=0.2, validation_data=(x_val, y_val), 
+
+model.save_weights('e200_model.h5')
+with open('e200_model.json', 'w') as f:
     f.write(model.to_json())
-    
-predictions_valid = model.predict(x_val, batch_size=128, verbose=1)
-score = log_loss(y_val, predictions_valid)
-print('Score log_loss: ', score)
