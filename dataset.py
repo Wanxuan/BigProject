@@ -60,22 +60,34 @@ def load_train(img_rows, img_cols, color_type=3):
     print(unique_drivers)
     return X_train, y_train, driver_id, unique_drivers
 
-def split_validation_set(train, target, test_size):
-    random_state = 51
-    X_train, X_test, y_train, y_test = train_test_split(
-        train, target, test_size=test_size, random_state=random_state)
-    return X_train, X_test, y_train, y_test
+# def split_validation_set(train, target, test_size):
+#     random_state = 51
+#     X_train, X_test, y_train, y_test = train_test_split(
+#         train, target, test_size=test_size, random_state=random_state)
+#     return X_train, X_test, y_train, y_test
 
-def read_and_normalize_train_data():
+def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
+    data = []
+    target = []
+    index = []
+    for i in range(len(driver_id)):
+        if driver_id[i] in driver_list:
+            data.append(train_data[i])
+            target.append(train_target[i])
+            index.append(i)
+    data = np.array(data, dtype=np.float32)
+    target = np.array(target, dtype=np.float32)
+    index = np.array(index, dtype=np.uint32)
+    return data, target, index
 
-    train, target, driver_id, unique_drivers = load_train(img_rows, img_cols, color_type)
-    X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.3)
-    X_train = np.array(X_train, dtype=np.uint8)
+def read_and_normalize_train_data(x_train, y_train, x_test, y_test):
+
+    X_train = np.array(x_train, dtype=np.uint8)
     y_train = np.array(y_train, dtype=np.uint8)
-    X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, color_type)
-    X_test = np.array(X_test, dtype=np.uint8)
-    X_test = np.array(X_test, dtype=np.uint8)
-    X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, color_type)
+    X_train = X_train.reshape(x_train.shape[0], img_rows, img_cols, color_type)
+    X_test = np.array(x_test, dtype=np.uint8)
+    y_test = np.array(y_test, dtype=np.uint8)
+    X_test = X_test.reshape(x_test.shape[0], img_rows, img_cols, color_type)
     y_train = np_utils.to_categorical(y_train, num_classes)
     y_test = np_utils.to_categorical(y_test, num_classes)
     
@@ -86,24 +98,34 @@ def read_and_normalize_train_data():
 
     print('Train shape:', X_train.shape)
     print('Test shape:', X_test.shape)
-    return X_train, X_test, y_train, y_test, driver_id, unique_drivers
+    return X_train, X_test, y_train, y_test
 
-X_train, X_test, y_train, y_test, driver_id, unique_drivers = read_and_normalize_train_data()
+train, target, driver_id, unique_drivers = load_train(img_rows, img_cols, color_type)
+yfull_train = dict()
+unique_list_train = ['p002', 'p012', 'p014', 'p015', 'p016', 'p021', 'p022', 'p024',
+                 'p026', 'p035', 'p039', 'p041', 'p042', 'p045', 'p047', 'p049',
+                 'p050', 'p051', 'p052', 'p056', 'p061']
+x_train, y_train, train_index = copy_selected_drivers(data, label, driver_id, unique_list_train)
+unique_list_test = ['p064', 'p066', 'p072', 'p075', 'p081']
+x_test, y_test, test_index = copy_selected_drivers(data, label, driver_id, unique_list_test)
+X_train, X_test, y_train, y_test = read_and_normalize_train_data(x_train, y_train, x_test, y_test)
     
+train_driver_id = [driver_id[i] for i in train_index]
+print(train_driver_id)
     
-train = h5py.File('train.h5', 'w')
-train.create_dataset('data', data=X_train, compression="gzip")
-train.create_dataset('label', data=y_train, compression="gzip")
-train.close()
+# train = h5py.File('train.h5', 'w')
+# train.create_dataset('data', data=X_train, compression="gzip")
+# train.create_dataset('label', data=y_train, compression="gzip")
+# train.close()
 
-test = h5py.File('test.h5', 'w')
-test.create_dataset('X_test', data=X_test, compression="gzip")
-test.create_dataset('y_test', data=y_test, compression="gzip")
-test.close()
+# test = h5py.File('test.h5', 'w')
+# test.create_dataset('X_test', data=X_test, compression="gzip")
+# test.create_dataset('y_test', data=y_test, compression="gzip")
+# test.close()
 
-driver = open('driver.pkl', 'wb')
-pickle.dump((driver_id, unique_drivers), driver)
-driver.close()
+# driver = open('driver.pkl', 'wb')
+# pickle.dump((driver_id, unique_list_train), driver)
+# driver.close()
 
 # test = open('test.pkl', 'wb')
 # pickle.dump((X_test, y_test), test)
