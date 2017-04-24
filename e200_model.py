@@ -106,8 +106,8 @@ model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy
 #                     nb_epoch=20, validation_data=(x_val, y_val), 
 #                     nb_val_samples=x_val.shape[0])
 
-model.fit(x_train, y_train, batch_size=batch_size, 
-          nb_epoch=200, verbose=1, validation_split=0.2, validation_data=(x_val, y_val), 
+model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=200, verbose=1, 
+          validation_split=0.2, validation_data=(x_val, y_val), shuffle=True)
 
 model.save_weights('e200_model.h5')
 with open('e200_model.json', 'w') as f:
