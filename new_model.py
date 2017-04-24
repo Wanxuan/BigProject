@@ -6,7 +6,7 @@ cifar_10模型跑15次就差不多没什么大变化了，15次loss是0.429，ac
 '''
 
 import numpy as np
-import pickle
+import pickle, h5py
 
 import keras
 from keras.utils import np_utils
@@ -20,8 +20,26 @@ batch_size = 32
 num_classes = 10
 np.random.seed(133)
 
-pkl_file = open('train.pkl', 'rb')
-data, label, driver_id, unique_drivers = pickle.load(pkl_file)
+driver_pkl = open('driver.pkl', 'rb')
+driver_id, unique_drivers = pickle.load(driver_pkl)
+file = h5py.File('train.h5', 'r')
+data = file['X_train'][:]
+label = file['y_train'][:]
+file.close()
+
+def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
+    data = []
+    target = []
+    index = []
+    for i in range(len(driver_id)):
+        if driver_id[i] in driver_list:
+            data.append(train_data[i])
+            target.append(train_target[i])
+            index.append(i)
+    data = np.array(data, dtype=np.float32)
+    target = np.array(target, dtype=np.float32)
+    index = np.array(index, dtype=np.uint32)
+    return data, target, index
 
 yfull_train = dict()
 unique_list_train = ['p002', 'p012', 'p014', 'p015', 'p016', 'p021', 'p022', 'p024',
