@@ -23,8 +23,8 @@ np.random.seed(133)
 driver_pkl = open('driver.pkl', 'rb')
 driver_id, unique_drivers = pickle.load(driver_pkl)
 file = h5py.File('train.h5', 'r')
-data = file['X_train'][:]
-label = file['y_train'][:]
+data = file['data'][:]
+label = file['label'][:]
 file.close()
 
 def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
