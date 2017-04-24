@@ -58,7 +58,7 @@ print('Test drivers: ', unique_list_valid)
 model = Sequential()
 
 model.add(Conv2D(32, 3, 3, border_mode='same',
-                 input_shape=X_train.shape[1:]))
+                 input_shape=x_train.shape[1:]))
 model.add(Activation('relu'))
 model.add(Conv2D(32, 3, 3))
 model.add(Activation('relu'))
@@ -112,7 +112,7 @@ datagen.fit(x_train)
     
 early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=X_train.shape[0], 
+                    samples_per_epoch=x_train.shape[0], 
                     nb_epoch=20, validation_data=(x_val, y_val), 
                     nb_val_samples=X_test.shape[0], callbacks=early_stop)
 
