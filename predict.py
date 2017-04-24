@@ -20,9 +20,9 @@ opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
 score = model.evaluate(X_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-print('测试集 score(val_loss): %.4f' % score[0])  # loss损失
-print('测试集 accuracy: %.4f' % score[1]) # 精度acc
-print("耗时: %.2f seconds ..." % (time.time() - t0))
+print('Test score(val_loss): %.4f' % score[0])  # loss损失
+print('Test accuracy: %.4f' % score[1]) # 精度acc
+
 
 # def get_result(result):
 #     # 将 one_hot 编码解码
