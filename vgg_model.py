@@ -100,10 +100,7 @@ print('Test Sample: ', len(x_test), len(y_test))
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
-model = VGG16(include_top=True, weights='imagenet',
-                                input_tensor=None, input_shape=None,
-                                pooling=None,
-                                classes=10)
+model = VGG16(include_top=True, weights='imagenet', classes=10)
 
 top_model = Sequential()
 top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
