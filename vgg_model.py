@@ -9,6 +9,7 @@ import numpy as np
 import pickle, h5py
 
 import keras
+from keras.applications.vgg16 import VGG16
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
@@ -99,7 +100,7 @@ print('Test Sample: ', len(x_test), len(y_test))
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
-model = keras.applications.vgg16.VGG16(include_top=True, weights='imagenet',
+model = VGG16(include_top=True, weights='imagenet',
                                 input_tensor=None, input_shape=None,
                                 pooling=None,
                                 classes=10)
