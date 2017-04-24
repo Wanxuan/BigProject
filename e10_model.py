@@ -22,16 +22,21 @@ num_classes = 10
 driver_pkl = open('driver.pkl', 'rb')
 driver_id, unique_drivers = pickle.load(driver_pkl)
 file = h5py.File('train.h5', 'r')
-data = file['data'][:]
-label = file['label'][:]
+x_train = file['data'][:]
+y_train = file['label'][:]
 file.close()
 
-def split_validation_set(train, target, test_size):
-#     random_state = 51
-    X_train, X_test, y_train, y_test = train_test_split(train, target, test_size=test_size)
-    return X_train, X_test, y_train, y_test
+file = h5py.File('test.h5', 'r')
+x_test = file['X_test'][:]
+y_test = file['y_test'][:]
+file.close()
 
-x_train, x_test, y_train, y_test = split_validation_set(data, label, 0.2)
+# def split_validation_set(train, target, test_size):
+# #     random_state = 51
+#     X_train, X_test, y_train, y_test = train_test_split(train, target, test_size=test_size)
+#     return X_train, X_test, y_train, y_test
+
+# x_train, x_test, y_train, y_test = split_validation_set(data, label, 0.2)
 # def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
 #     data = []
 #     target = []
@@ -54,9 +59,9 @@ x_train, x_test, y_train, y_test = split_validation_set(data, label, 0.2)
 # unique_list_valid = ['p061']
 # x_val, y_val, val_index = copy_selected_drivers(data, label, driver_id, unique_list_valid)
 
-# print('Start Single Run')
-# print('Split train: ', len(x_train), len(y_train))
-# print('Split valid: ', len(x_val), len(y_val))
+print('Start Single Run')
+print('Train Sample: ', len(x_train), len(y_train))
+print('Test Sample: ', len(x_test), len(y_test))
 # print('Train drivers: ', unique_list_train)
 # print('Test drivers: ', unique_list_valid)
 
@@ -114,7 +119,11 @@ model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy
 model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=10, verbose=1, 
           validation_split=0.1, validation_data=(x_test, y_test), shuffle=True)
 
-model.save_weights('e20_model.h5')
-with open('e20_model.json', 'w') as f:
+score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+print('Test score(val_loss): %.4f' % score[0])  # loss损失
+print('Test accuracy: %.4f' % score[1]) # 精度acc
+
+model.save_weights('e10_model.h5')
+with open('e10_model.json', 'w') as f:
     f.write(model.to_json())
           
