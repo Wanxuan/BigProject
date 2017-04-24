@@ -111,21 +111,20 @@ x_test, y_test, test_index = copy_selected_drivers(data, label, driver_id, uniqu
 X_train, X_test, y_train, y_test = read_and_normalize_train_data(x_train, y_train, x_test, y_test)
     
 train_driver_id = [driver_id[i] for i in train_index]
-print(train_driver_id)
     
-# train = h5py.File('train.h5', 'w')
-# train.create_dataset('data', data=X_train, compression="gzip")
-# train.create_dataset('label', data=y_train, compression="gzip")
-# train.close()
+train = h5py.File('train.h5', 'w')
+train.create_dataset('data', data=X_train, compression="gzip")
+train.create_dataset('label', data=y_train, compression="gzip")
+train.close()
 
-# test = h5py.File('test.h5', 'w')
-# test.create_dataset('X_test', data=X_test, compression="gzip")
-# test.create_dataset('y_test', data=y_test, compression="gzip")
-# test.close()
+test = h5py.File('test.h5', 'w')
+test.create_dataset('X_test', data=X_test, compression="gzip")
+test.create_dataset('y_test', data=y_test, compression="gzip")
+test.close()
 
-# driver = open('driver.pkl', 'wb')
-# pickle.dump((driver_id, unique_list_train), driver)
-# driver.close()
+driver = open('driver.pkl', 'wb')
+pickle.dump((train_driver_id, unique_list_train), driver)
+driver.close()
 
 # test = open('test.pkl', 'wb')
 # pickle.dump((X_test, y_test), test)
