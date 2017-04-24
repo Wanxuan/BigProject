@@ -19,8 +19,6 @@ model.load_weights('new_model.h5')
 opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
-Y_pred = model.predict_proba(X_test, verbose=1)  # Keras预测概率Y_pred
-print(Y_pred[:3, ])  # 取前三张图片的十类预测概率看看
 score = model.evaluate(X_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
 print('测试集 score(val_loss): %.4f' % score[0])  # loss损失
 print('测试集 accuracy: %.4f' % score[1]) # 精度acc
