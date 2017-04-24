@@ -18,7 +18,6 @@ from sklearn.model_selection import train_test_split
 
 batch_size = 32
 num_classes = 10
-np.random.seed(133)
 
 driver_pkl = open('driver.pkl', 'rb')
 driver_id, unique_drivers = pickle.load(driver_pkl)
@@ -87,27 +86,27 @@ model.add(Activation('softmax'))
 opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 
-# datagen = ImageDataGenerator(
-#     featurewise_center=False,  # set input mean to 0 over the dataset
-#     samplewise_center=False,  # set each sample mean to 0
-#     featurewise_std_normalization=False,  # divide inputs by std of the dataset
-#     samplewise_std_normalization=False,  # divide each input by its std
-#     zca_whitening=False,  # apply ZCA whitening
-#     rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-#     width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
-#     height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
-#     horizontal_flip=True,  # randomly flip images
-#     vertical_flip=False)  # randomly flip images
+datagen = ImageDataGenerator(
+    featurewise_center=False,  # set input mean to 0 over the dataset
+    samplewise_center=False,  # set each sample mean to 0
+    featurewise_std_normalization=False,  # divide inputs by std of the dataset
+    samplewise_std_normalization=False,  # divide each input by its std
+    zca_whitening=False,  # apply ZCA whitening
+    rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
+    width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
+    height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
+    horizontal_flip=True,  # randomly flip images
+    vertical_flip=False)  # randomly flip images
 
-# datagen.fit(x_train)
+datagen.fit(x_train)
     
-# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-#                     samples_per_epoch=x_train.shape[0], 
-#                     nb_epoch=20, validation_data=(x_val, y_val), 
-#                     nb_val_samples=x_val.shape[0])
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+                    samples_per_epoch=x_train.shape[0], 
+                    nb_epoch=50, validation_data=(x_val, y_val), 
+                    nb_val_samples=x_val.shape[0])
 
-model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=200, verbose=1, 
-          validation_split=0.1, validation_data=(x_val, y_val), shuffle=True)
+# model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=200, verbose=1, 
+#           validation_split=0.1, validation_data=(x_val, y_val), shuffle=True)
 
 model.save_weights('e200_model.h5')
 with open('e200_model.json', 'w') as f:
