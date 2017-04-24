@@ -111,4 +111,5 @@ model.fit(x_train, y_train, batch_size=batch_size,
 
 model.save_weights('e200_model.h5')
 with open('e200_model.json', 'w') as f:
-          f.write(model.to_json())
+    f.write(model.to_json())
+          
