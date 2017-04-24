@@ -114,7 +114,7 @@ early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, verbo
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], 
                     nb_epoch=20, validation_data=(x_val, y_val), 
-                    nb_val_samples=X_test.shape[0], callbacks=early_stop)
+                    nb_val_samples=x_val.shape[0], callbacks=early_stop)
 
 model.save_weights('new_model.h5')
 with open('new_model.json', 'w') as f:
