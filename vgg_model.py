@@ -65,53 +65,6 @@ print('Test Sample: ', len(x_test), len(y_test))
 # print('Train drivers: ', unique_list_train)
 # print('Test drivers: ', unique_list_valid)
 
-model = Sequential()
-model.add(ZeroPadding2D((1, 1), input_shape=x_train.shape[1:]))
-model.add(Conv2D(64, 3, 3, activation='relu', name='conv1_1'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(64, 3, 3, activation='relu', name='conv1_2'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, 3, 3, activation='relu', name='conv2_1'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, 3, 3, activation='relu', name='conv2_2'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu', name='conv3_1'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu', name='conv3_2'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu', name='conv3_3'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu', name='conv4_1'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu', name='conv4_2'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu', name='conv4_3'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu', name='conv5_1'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu', name='conv5_2'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu', name='conv5_3'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
-
-model.add(Flatten())
-model.add(Dense(4096, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(4096, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
-
-sgd = keras.optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy'])
-
 #-----------------------------------Cifar10----------------------------------#
 # model = Sequential()
 
@@ -146,6 +99,29 @@ model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
+model = keras.applications.vgg16.VGG16(include_top=True, weights='imagenet',
+                                input_tensor=None, input_shape=None,
+                                pooling=None,
+                                classes=10)
+
+top_model = Sequential()
+top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
+top_model.add(Dense(256, activation='relu'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(10, activation='softmax'))
+
+# add the model on top of the convolutional base
+model.add(top_model)
+
+for layer in model.layers[:25]:
+    layer.trainable = False
+
+model.compile(loss='categorical_crossentropy',
+              optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
+              metrics=['accuracy'])
+
+#-----------------------------VGG---------------------------------#
+
 datagen = ImageDataGenerator(
     featurewise_center=False,  # set input mean to 0 over the dataset
     samplewise_center=False,  # set each sample mean to 0
@@ -162,7 +138,7 @@ datagen.fit(x_train)
     
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], 
-                    nb_epoch=5, validation_data=(x_test, y_test), 
+                    nb_epoch=50, validation_data=(x_test, y_test), 
                     nb_val_samples=x_test.shape[0])
 
 # model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=10, verbose=1, 
