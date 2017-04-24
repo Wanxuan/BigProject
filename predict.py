@@ -1,5 +1,5 @@
-import h5py
-import random
+import h5py, random
+import keras
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.models import model_from_json
