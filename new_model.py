@@ -44,10 +44,9 @@ def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
 yfull_train = dict()
 unique_list_train = ['p002', 'p012', 'p014', 'p015', 'p016', 'p021', 'p022', 'p024',
                  'p026', 'p035', 'p039', 'p041', 'p042', 'p045', 'p047', 'p049',
-                 'p050', 'p051', 'p052', 'p056', 'p061', 'p064', 'p066', 'p072',
-                 'p075']
+                 'p050', 'p051', 'p052', 'p056']
 x_train, y_train, train_index = copy_selected_drivers(data, label, driver_id, unique_list_train)
-unique_list_valid = ['p081']
+unique_list_valid = ['p061']
 x_val, y_val, val_index = copy_selected_drivers(data, label, driver_id, unique_list_valid)
 
 print('Start Single Run')
