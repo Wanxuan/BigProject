@@ -13,8 +13,8 @@ y_test = file['y_test'][:]
 file.close()
 
 #读取model  
-model = model_from_json(open('new_model.json').read())  
-model.load_weights('new_model.h5')
+model = model_from_json(open('e200_model.json').read())  
+model.load_weights('e200_model.h5')
 
 opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
