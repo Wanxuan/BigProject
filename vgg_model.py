@@ -100,7 +100,7 @@ print('Test Sample: ', len(x_test), len(y_test))
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
-base_model = VGG16(include_top=False, weights='imagenet')
+base_model = VGG16(include_top=False, weights='imagenet', input_shape=x_train.shape[1:])
 x = base_model.output
 x = Flatten()(x)
 x = Dense(256, activation='relu')(x)
