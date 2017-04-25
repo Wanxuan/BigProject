@@ -146,12 +146,26 @@ datagen = ImageDataGenerator(
         zoom_range=0.2,
         horizontal_flip=True)
 
-bottleneck_features_train = base_model.predict_generator(
+train_data = base_model.predict_generator(
     datagen.flow(x_train, y_train, batch_size=32), len(x_train))
-np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
-bottleneck_features_validation = base_model.predict_generator(
+test_data = base_model.predict_generator(
     datagen.flow(x_test, y_test, batch_size=32), len(x_test))
-np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_validation)
+print(train_data.shape)
+print(test_data.shape)
+# model = Sequential()
+# model.add(Flatten(input_shape=train_data.shape[1:]))
+# model.add(Dense(256, activation='relu'))
+# model.add(Dropout(0.5))
+# model.add(Dense(1, activation='sigmoid'))
+
+# model.compile(optimizer='rmsprop',
+#               loss='binary_crossentropy',
+#               metrics=['accuracy'])
+
+# model.fit(train_data, train_labels,
+#           nb_epoch=50, batch_size=32,
+#           validation_data=(validation_data, validation_labels))
+# model.save_weights('bottleneck_fc_model.h5')
 
 #-----------------------------VGG---------------------------------#
 
