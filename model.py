@@ -27,7 +27,7 @@ file.close()
 model = Sequential()
 
 model.add(Conv2D(32, 3, 3, border_mode='same',
-                 input_shape=X_train.shape[1:]))
+                 input_shape=x_train.shape[1:]))
 model.add(Activation('relu'))
 model.add(Conv2D(32, 3, 3))
 model.add(Activation('relu'))
@@ -65,7 +65,7 @@ datagen = ImageDataGenerator(
         horizontal_flip=True, 
         vertical_flip=False)
 
-datagen.fit(X_train)
+datagen.fit(x_train)
     
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], 
