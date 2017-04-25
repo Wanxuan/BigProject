@@ -61,8 +61,8 @@ file.close()
 # x_val, y_val, val_index = copy_selected_drivers(data, label, driver_id, unique_list_valid)
 
 print('Start Single Run')
-print('Train Sample: ', len(x_train), len(y_train))
-print('Test Sample: ', len(x_test), len(y_test))
+print('Train Sample: ', x_train.shape, len(y_train))
+print('Test Sample: ', x_test.shape, len(y_test))
 # print('Train drivers: ', unique_list_train)
 # print('Test drivers: ', unique_list_valid)
 
@@ -100,44 +100,9 @@ print('Test Sample: ', len(x_test), len(y_test))
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
-model = Sequential()
-model.add(ZeroPadding2D((1,1),input_shape=x_train.shape[1:]))
-model.add(Conv2D(64, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(64, 3, 3, activation='relu'))
-model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(128, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(128, 3, 3, activation='relu'))
-model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
-model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
-model.add(MaxPooling2D((2,2), strides=(2,2)))
-
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
-model.add(ZeroPadding2D((1,1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
-model.add(MaxPooling2D((2,2), strides=(2,2)))
-# input_tensor = Input(shape=x_train.shape[1:])
-# base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+input_tensor = Input(shape=x_train.shape[1:])
+base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor
+                  ,pooling='max')
 
 # x = base_model.output
 # x = Flatten()(x)
@@ -172,7 +137,7 @@ model.compile(loss='categorical_crossentropy',
 # for layer in model.layers[:25]:
 #     layer.trainable = False
 
-model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=50, verbose=1, 
+model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=1, verbose=1, 
                validation_data=(x_test, y_test))
 
 datagen = ImageDataGenerator(
