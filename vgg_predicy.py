@@ -3,7 +3,8 @@ from keras.preprocessing import image
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 import numpy as np
 
-model = VGG16(weights='imagenet')
+input_tensor = Input(shape=x_train.shape[1:])
+model = VGG16(weights='imagenet', input_tensor=input_tensor)
 
 img_path = 'test/img_1.jpg'
 img = image.load_img(img_path, target_size=(480, 640))
