@@ -24,7 +24,7 @@ y_test = file['y_test'][:]
 file.close()
     
 model = Sequential()
-model.add(ZeroPadding2D((1, 1), input_shape=(3, 224, 224)))
+model.add(ZeroPadding2D((1, 1), input_shape=x_train.shape[1:]))
 model.add(Conv2D(64, 3, 3, activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
 model.add(Conv2D(64, 3, 3, activation='relu'))
