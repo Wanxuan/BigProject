@@ -105,14 +105,12 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = GlobalAveragePooling2D()(x)
+x = Flatten()(x)
+x = Dense(512, activation='relu')(x)
+x = Dropout(0.5)(x)
+prediction = Dense(10, activation='softmax')(x)
 
-# x = base_model.output
-# x = Flatten()(x)
-# x = Dense(512, activation='relu')(x)
-# x = Dropout(0.5)(x)
-# prediction = Dense(10, activation='softmax')(x)
-
-# model = Model(input=base_model.input, output=prediction)
+model = Model(input=base_model.input, output=prediction)
 
 # datagen = ImageDataGenerator(
 #     featurewise_center=False,  # set input mean to 0 over the dataset
@@ -128,7 +126,7 @@ x = GlobalAveragePooling2D()(x)
 
 # datagen.fit(x_train)
    
-base_model.compile(loss='categorical_crossentropy',
+model.compile(loss='categorical_crossentropy',
               optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
               metrics=['accuracy'])
 # model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
@@ -142,41 +140,41 @@ base_model.compile(loss='categorical_crossentropy',
 # base_model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=1, verbose=1, 
 #                validation_data=(x_test, y_test))
 
-datagen = ImageDataGenerator(
-        shear_range=0.2,
-        zoom_range=0.2,
-        horizontal_flip=True)
+# datagen = ImageDataGenerator(
+#         shear_range=0.2,
+#         zoom_range=0.2,
+#         horizontal_flip=True)
 
-train_data = base_model.predict_generator(
-    datagen.flow(x_train, y_train, batch_size=32), len(x_train))
-test_data = base_model.predict_generator(
-    datagen.flow(x_test, y_test, batch_size=32), len(x_test))
+# train_data = base_model.predict_generator(
+#     datagen.flow(x_train, y_train, batch_size=32), len(x_train))
+# test_data = base_model.predict_generator(
+#     datagen.flow(x_test, y_test, batch_size=32), len(x_test))
 
-model = Sequential()
-model.add(Flatten(input_shape=train_data.shape[1:]))
-model.add(Dense(256, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
+# model = Sequential()
+# model.add(Flatten(input_shape=train_data.shape[1:]))
+# model.add(Dense(256, activation='relu'))
+# model.add(Dropout(0.5))
+# model.add(Dense(10, activation='softmax'))
 
-model.compile(optimizer='rmsprop',
-              loss='categorical_crossentropy',
-              metrics=['accuracy'])
+# model.compile(optimizer='rmsprop',
+#               loss='categorical_crossentropy',
+#               metrics=['accuracy'])
 
-model.fit(train_data, y_train,
-          nb_epoch=50, batch_size=32,
-          validation_data=(test_data, y_test))
-model.save_weights('bottleneck_fc_model.h5')
+model.fit(x_train, y_train, nb_epoch=50, 
+          batch_size=32, verbose=1,
+          validation_split=0.2
+          validation_data=(x_test, y_test))
 
 #-----------------------------VGG---------------------------------#
 
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
 
-# score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-# print('Test score(val_loss): %.4f' % score[0])  # loss损失
-# print('Test accuracy: %.4f' % score[1]) # 精度acc
+score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+print('Test score(val_loss): %.4f' % score[0])  # loss损失
+print('Test accuracy: %.4f' % score[1]) # 精度acc
 
-# model.save_weights('vgg_model.h5')
-# with open('vgg_model.json', 'w') as f:
-#     f.write(model.to_json())
+model.save_weights('e50_model.h5')
+with open('e50_model.json', 'w') as f:
+    f.write(model.to_json())
           
