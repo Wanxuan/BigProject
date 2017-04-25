@@ -15,6 +15,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten, Input
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
+from keras import optimizers
 from sklearn.model_selection import train_test_split
 
 batch_size = 32
@@ -150,22 +151,21 @@ train_data = base_model.predict_generator(
     datagen.flow(x_train, y_train, batch_size=32), len(x_train))
 test_data = base_model.predict_generator(
     datagen.flow(x_test, y_test, batch_size=32), len(x_test))
-print(train_data.shape)
-print(test_data.shape)
-# model = Sequential()
-# model.add(Flatten(input_shape=train_data.shape[1:]))
-# model.add(Dense(256, activation='relu'))
-# model.add(Dropout(0.5))
-# model.add(Dense(1, activation='sigmoid'))
 
-# model.compile(optimizer='rmsprop',
-#               loss='binary_crossentropy',
-#               metrics=['accuracy'])
+model = Sequential()
+model.add(Flatten(input_shape=train_data.shape[1:]))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='softmax'))
 
-# model.fit(train_data, train_labels,
-#           nb_epoch=50, batch_size=32,
-#           validation_data=(validation_data, validation_labels))
-# model.save_weights('bottleneck_fc_model.h5')
+model.compile(optimizer='rmsprop',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit(train_data, y_train,
+          nb_epoch=50, batch_size=32,
+          validation_data=(test_data, y_test))
+model.save_weights('bottleneck_fc_model.h5')
 
 #-----------------------------VGG---------------------------------#
 
