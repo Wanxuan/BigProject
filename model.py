@@ -65,7 +65,7 @@ datagen = ImageDataGenerator(
         horizontal_flip=True, 
         vertical_flip=False)
 
-    datagen.fit(X_train)
+datagen.fit(X_train)
     
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], 
