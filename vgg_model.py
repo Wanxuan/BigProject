@@ -147,10 +147,10 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
 
 bottleneck_features_train = base_model.predict_generator(
-    datagen.flow(x_train, y_train, batch_size=32), x_train.shape[1:])
+    datagen.flow(x_train, y_train, batch_size=32), len(x_train))
 np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
 bottleneck_features_validation = base_model.predict_generator(
-    datagen.flow(x_test, y_test, batch_size=32), x_test.shape[1:])
+    datagen.flow(x_test, y_test, batch_size=32), len(x_test))
 np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_validation)
 
 #-----------------------------VGG---------------------------------#
