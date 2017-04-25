@@ -104,15 +104,15 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 
 top_model = Sequential()
-top_model.add(Flatten())
+top_model.add(Flatten(input_shape=x_train.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(10, activation='softmax'))
 
 model = Model(input=base_model.input, output=top_model.output)
 
-for layer in model.layers[:25]:
-    layer.trainable = False
+# for layer in model.layers[:25]:
+#     layer.trainable = False
 
 model.compile(loss='categorical_crossentropy',
               optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
@@ -149,7 +149,7 @@ score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('vgg_model.h5')
-with open('vgg_model.json', 'w') as f:
+model.save_weights('model.h5')
+with open('model.json', 'w') as f:
     f.write(model.to_json())
           
