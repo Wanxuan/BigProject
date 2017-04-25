@@ -10,7 +10,6 @@ from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
 
 batch_size = 32
 num_classes = 10
-np.random.seed(133)
 
 driver_pkl = open('driver.pkl', 'rb')
 driver_id, unique_drivers = pickle.load(driver_pkl)
@@ -25,27 +24,47 @@ y_test = file['y_test'][:]
 file.close()
     
 model = Sequential()
+model.add(ZeroPadding2D((1, 1), input_shape=(3, 224, 224)))
+model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-model.add(Conv2D(32, 3, 3, border_mode='same',
-                 input_shape=x_train.shape[1:]))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Conv2D(32, 4, 4))
-model.add(Activation('relu'))
-model.add(AveragePooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(128, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(128, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-model.add(Conv2D(64, 5, 5, border_mode='same'))
-model.add(Activation('relu'))
-model.add(AveragePooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+
+# Add another conv layer with ReLU + GAP
+model.add(Conv2D(1024, 3, 3, activation='relu', border_mode="same"))
+model.add(AveragePooling2D((14, 14)))
 model.add(Flatten())
-model.add(Dense(64))
-model.add(Activation('relu'))
-model.add(Dropout(0.5))
-model.add(Dense(num_classes))
-model.add(Activation('softmax'))
+# Add the W layer
+model.add(Dense(num_classes, activation='softmax'))
 
 opt = keras.optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(optimizer=opt,
@@ -78,6 +97,6 @@ print('Test accuracy: %.4f' % score[1]) # 精度acc
 # json_string = model.to_json()  
 # open('gen_model.json','w').write(json_string)  
 # model.save_weights('gen_model_weights.h5')
-model.save_weights('cifar10_model.h5')
-with open('cifar10_model.json', 'w') as f:
+model.save_weights('vgg_model.h5')
+with open('vgg_model.json', 'w') as f:
     f.write(model.to_json())
