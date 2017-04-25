@@ -100,16 +100,14 @@ print('Test Sample: ', len(x_test), len(y_test))
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
-model = VGG16(include_top=True, weights='imagenet')
+base_model = VGG16(include_top=True, weights='imagenet')
+x = base_mode.output
+x = Flatten()(x)
+x = Dense(256, activation='relu')(x)
+x = Dropout(0.5)(x)
+prediction = Dense(10, activation='softmax')(x)
 
-top_model = Sequential()
-top_model.add(Flatten(input_shape=x_train.shape[1:]))
-top_model.add(Dense(256, activation='relu'))
-top_model.add(Dropout(0.5))
-top_model.add(Dense(10, activation='softmax'))
-
-# add the model on top of the convolutional base
-model.add(top_model)
+model = Model(input=base_model.input, output=prediction)
 
 for layer in model.layers[:25]:
     layer.trainable = False
@@ -142,6 +140,8 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
 # model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=10, verbose=1, 
 #           validation_split=0.1, validation_data=(x_test, y_test), shuffle=True)
 
+for i, layer in enumerate(base_model.layers):
+    print(i, layer.name)
 
 score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
