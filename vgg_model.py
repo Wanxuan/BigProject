@@ -101,7 +101,7 @@ print('Test Sample: ', len(x_test), len(y_test))
 #-----------------------------------Cifar10 End----------------------------------#
 
 base_model = VGG16(include_top=False, weights='imagenet')
-x = base_model.output
+x = base_model.output_shape[1:]
 x = Flatten(input_shape=x)
 x = Dense(256, activation='relu')(x)
 x = Dropout(0.5)(x)
