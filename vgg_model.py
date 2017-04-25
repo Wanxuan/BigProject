@@ -14,7 +14,7 @@ from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten, Input
-from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
+from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from sklearn.model_selection import train_test_split
 
 batch_size = 32
