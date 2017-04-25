@@ -111,27 +111,27 @@ prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
 
-# datagen = ImageDataGenerator(
-#     featurewise_center=False,  # set input mean to 0 over the dataset
-#     samplewise_center=False,  # set each sample mean to 0
-#     featurewise_std_normalization=False,  # divide inputs by std of the dataset
-#     samplewise_std_normalization=False,  # divide each input by its std
-#     zca_whitening=False,  # apply ZCA whitening
-#     rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
-#     width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
-#     height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
-#     horizontal_flip=True,  # randomly flip images
-#     vertical_flip=False)  # randomly flip images
+datagen = ImageDataGenerator(
+    featurewise_center=False,  # set input mean to 0 over the dataset
+    samplewise_center=False,  # set each sample mean to 0
+    featurewise_std_normalization=False,  # divide inputs by std of the dataset
+    samplewise_std_normalization=False,  # divide each input by its std
+    zca_whitening=False,  # apply ZCA whitening
+    rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
+    width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
+    height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
+    horizontal_flip=True,  # randomly flip images
+    vertical_flip=False)  # randomly flip images
 
-# datagen.fit(x_train)
+datagen.fit(x_train)
    
 model.compile(loss='categorical_crossentropy',
               optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
               metrics=['accuracy'])
-# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-#                     samples_per_epoch=x_train.shape[0], 
-#                     nb_epoch=50, validation_data=(x_test, y_test), 
-#                     nb_val_samples=x_test.shape[0])
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+                    samples_per_epoch=x_train.shape[0], 
+                    nb_epoch=10, validation_data=(x_test, y_test), 
+                    nb_val_samples=x_test.shape[0])
 
 # for layer in model.layers[:25]:
 #     layer.trainable = False
@@ -159,10 +159,10 @@ model.compile(loss='categorical_crossentropy',
 #               loss='categorical_crossentropy',
 #               metrics=['accuracy'])
 
-model.fit(x_train, y_train, nb_epoch=50, 
-          batch_size=32, verbose=1,
-          validation_split=0.2,
-          validation_data=(x_test, y_test))
+# model.fit(x_train, y_train, nb_epoch=10, 
+#           batch_size=32, verbose=1,
+#           validation_split=0.2,
+#           validation_data=(x_test, y_test))
 
 #-----------------------------VGG---------------------------------#
 
@@ -173,7 +173,7 @@ score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('e50_model.h5')
-with open('e50_model.json', 'w') as f:
+model.save_weights('e10_model.h5')
+with open('e10_model.json', 'w') as f:
     f.write(model.to_json())
           
