@@ -16,6 +16,7 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten, Input
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras import optimizers
+from keras import regularizers
 from sklearn.model_selection import train_test_split
 
 batch_size = 32
@@ -105,13 +106,16 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = Flatten()(x)
-x = Dense(512, activation='relu')(x)
+x = Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.01))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
 
 datagen = ImageDataGenerator(
+        rotation_range=40
+        width_shift_range=0.1
+        height_shift_range=0.1
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True)
@@ -165,7 +169,7 @@ score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('e10_model.h5')
-with open('e10_model.json', 'w') as f:
+model.save_weights('new_model.h5')
+with open('new_model.json', 'w') as f:
     f.write(model.to_json())
           
