@@ -20,6 +20,9 @@ x_test = file['X_test'][:]
 y_test = file['y_test'][:]
 file.close()
 
+input_tensor = Input(shape=x_train.shape[1:])
+model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+
 datagen = ImageDataGenerator(
     featurewise_center=False,  # set input mean to 0 over the dataset
     samplewise_center=False,  # set each sample mean to 0
@@ -33,7 +36,7 @@ datagen = ImageDataGenerator(
     vertical_flip=False)  # randomly flip images
     
 generator = datagen.flow(x_train, y_train, batch_size=32)
-bottleneck_features_train = base_model.predict_generator(generator, x_train.shape[1:])
+bottleneck_features_train = model.predict_generator(generator, x_train.shape[1:])
 np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
 
 generator = datagen.flow(x_test, y_test, batch_size=32)
