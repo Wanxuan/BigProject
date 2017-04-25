@@ -100,8 +100,44 @@ print('Test Sample: ', len(x_test), len(y_test))
 # model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 #-----------------------------------Cifar10 End----------------------------------#
 
-input_tensor = Input(shape=x_train.shape[1:])
-base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+model = Sequential()
+model.add(ZeroPadding2D((1,1),input_shape=x_train.shape[1:]))
+model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2,2), strides=(2,2)))
+
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(128, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(128, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2,2), strides=(2,2)))
+
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2,2), strides=(2,2)))
+
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2,2), strides=(2,2)))
+
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(ZeroPadding2D((1,1)))
+model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(MaxPooling2D((2,2), strides=(2,2)))
+# input_tensor = Input(shape=x_train.shape[1:])
+# base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 
 # x = base_model.output
 # x = Flatten()(x)
@@ -125,7 +161,7 @@ base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_ten
 
 # datagen.fit(x_train)
    
-base_model.compile(loss='categorical_crossentropy',
+model.compile(loss='categorical_crossentropy',
               optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
               metrics=['accuracy'])
 # model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
@@ -136,7 +172,7 @@ base_model.compile(loss='categorical_crossentropy',
 # for layer in model.layers[:25]:
 #     layer.trainable = False
 
-base_model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=50, verbose=1, 
+model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=50, verbose=1, 
                validation_data=(x_test, y_test))
 
 datagen = ImageDataGenerator(
@@ -165,7 +201,7 @@ np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_val
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
 
-score = base_model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
