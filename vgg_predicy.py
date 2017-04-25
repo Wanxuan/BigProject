@@ -1,5 +1,6 @@
 from keras.applications.vgg16 import VGG16
 from keras.preprocessing import image
+from keras.layers import Dense, Dropout, Activation, Flatten, Input
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 import numpy as np
 
