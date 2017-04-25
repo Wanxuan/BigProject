@@ -10,6 +10,7 @@ import pickle, h5py
 
 import keras
 from keras.applications.vgg16 import VGG16
+from keras.models import Model
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
