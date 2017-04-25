@@ -4,7 +4,7 @@ from keras.layers import Dense, Dropout, Activation, Flatten, Input
 from keras.applications.resnet50 import preprocess_input, decode_predictions
 import numpy as np
 
-input_tensor = Input(shape=(480, 640, 3))
+input_tensor = Input(shape=(1, 480, 640, 3))
 model = VGG16(weights='imagenet', input_tensor=input_tensor)
 
 img_path = 'test/img_1.jpg'
