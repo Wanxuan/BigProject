@@ -109,7 +109,7 @@ top_model.add(Dense(256, activation='relu'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(10, activation='softmax'))
 
-model = Model(input=base_model.input, output=top_model)
+model = Model(input=base_model.input, output=top_model.output)
 
 for layer in model.layers[:25]:
     layer.trainable = False
