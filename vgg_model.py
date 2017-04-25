@@ -104,7 +104,7 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 
 top_model = Sequential()
-top_model.add(Flatten(input_shape=x_train.shape[1:]))
+top_model.add(Flatten())
 top_model.add(Dense(256, activation='relu'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(10, activation='softmax'))
