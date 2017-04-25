@@ -6,7 +6,7 @@ from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation, Flatten
-from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
 
 batch_size = 32
 num_classes = 10
@@ -29,20 +29,19 @@ model = Sequential()
 model.add(Conv2D(32, 3, 3, border_mode='same',
                  input_shape=x_train.shape[1:]))
 model.add(Activation('relu'))
-model.add(Conv2D(32, 3, 3))
-model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Conv2D(32, 4, 4))
+model.add(Activation('relu'))
+model.add(AveragePooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, 3, 3, border_mode='same'))
+model.add(Conv2D(64, 5, 5, border_mode='same'))
 model.add(Activation('relu'))
-model.add(Conv2D(64, 3, 3))
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(AveragePooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
 model.add(Flatten())
-model.add(Dense(512))
+model.add(Dense(64))
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes))
@@ -69,7 +68,7 @@ datagen.fit(x_train)
     
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], 
-                    nb_epoch=50, validation_data=(x_test, y_test), 
+                    nb_epoch=10, validation_data=(x_test, y_test), 
                     nb_val_samples=x_test.shape[0])
 
 score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
