@@ -101,8 +101,9 @@ print('Test Sample: ', x_test.shape, len(y_test))
 #-----------------------------------Cifar10 End----------------------------------#
 
 input_tensor = Input(shape=x_train.shape[1:])
-base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor
-                  ,pooling='max')
+base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+x = base_model.output
+x = GlobalAveragePooling2D()(x)
 
 # x = base_model.output
 # x = Flatten()(x)
@@ -126,7 +127,7 @@ base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_ten
 
 # datagen.fit(x_train)
    
-model.compile(loss='categorical_crossentropy',
+base_model.compile(loss='categorical_crossentropy',
               optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
               metrics=['accuracy'])
 # model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
@@ -137,8 +138,8 @@ model.compile(loss='categorical_crossentropy',
 # for layer in model.layers[:25]:
 #     layer.trainable = False
 
-model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=1, verbose=1, 
-               validation_data=(x_test, y_test))
+# base_model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=1, verbose=1, 
+#                validation_data=(x_test, y_test))
 
 datagen = ImageDataGenerator(
     featurewise_center=False,  # set input mean to 0 over the dataset
@@ -166,9 +167,9 @@ np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_val
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
 
-score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-print('Test score(val_loss): %.4f' % score[0])  # loss损失
-print('Test accuracy: %.4f' % score[1]) # 精度acc
+# score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+# print('Test score(val_loss): %.4f' % score[0])  # loss损失
+# print('Test accuracy: %.4f' % score[1]) # 精度acc
 
 # model.save_weights('vgg_model.h5')
 # with open('vgg_model.json', 'w') as f:
