@@ -101,7 +101,44 @@ print('Test Sample: ', len(x_test), len(y_test))
 #-----------------------------------Cifar10 End----------------------------------#
 
 input_tensor = Input(shape=x_train.shape[1:])
-base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor
+                  pooling='max')
+
+# x = base_model.output
+# x = Flatten()(x)
+# x = Dense(512, activation='relu')(x)
+# x = Dropout(0.5)(x)
+# prediction = Dense(10, activation='softmax')(x)
+
+# model = Model(input=base_model.input, output=prediction)
+
+# datagen = ImageDataGenerator(
+#     featurewise_center=False,  # set input mean to 0 over the dataset
+#     samplewise_center=False,  # set each sample mean to 0
+#     featurewise_std_normalization=False,  # divide inputs by std of the dataset
+#     samplewise_std_normalization=False,  # divide each input by its std
+#     zca_whitening=False,  # apply ZCA whitening
+#     rotation_range=0,  # randomly rotate images in the range (degrees, 0 to 180)
+#     width_shift_range=0.1,  # randomly shift images horizontally (fraction of total width)
+#     height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
+#     horizontal_flip=True,  # randomly flip images
+#     vertical_flip=False)  # randomly flip images
+
+# datagen.fit(x_train)
+   
+base_model.compile(loss='categorical_crossentropy',
+              optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
+              metrics=['accuracy'])
+# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+#                     samples_per_epoch=x_train.shape[0], 
+#                     nb_epoch=50, validation_data=(x_test, y_test), 
+#                     nb_val_samples=x_test.shape[0])
+
+# for layer in model.layers[:25]:
+#     layer.trainable = False
+
+base_model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=50, verbose=1, 
+               validation_data=(x_test, y_test))
 
 datagen = ImageDataGenerator(
     featurewise_center=False,  # set input mean to 0 over the dataset
@@ -114,47 +151,25 @@ datagen = ImageDataGenerator(
     height_shift_range=0.1,  # randomly shift images vertically (fraction of total height)
     horizontal_flip=True,  # randomly flip images
     vertical_flip=False)  # randomly flip images
-train_generator = datagen.flow(x_train, batch_size=batch_size)
-train_data = base_model.predict_generator(train_generator, x_train.shape[1:])
-test_generator = datagen.flow(x_test, batch_size=batch_size)
-test_data = base_model.predict_generator(test_generator, x_test.shape[1:])
 
-top_model = Sequential()
-top_model.add(Flatten(input_shape=train_data.shape[1:]))
-top_model.add(Dense(256, activation='relu'))
-top_model.add(Dropout(0.5))
-top_model.add(Dense(10, activation='softmax'))
-
-# model = Model(input=base_model.input, output=top_model.output)
-
-# for layer in model.layers[:25]:
-#     layer.trainable = False
-
-base_model.compile(loss='categorical_crossentropy',
-              optimizer=keras.optimizers.SGD(lr=1e-4, momentum=0.9),
-              metrics=['accuracy'])
-base_model.fit(train_data, y_train, batch_size=batch_size, nb_epoch=50, verbose=1, 
-               validation_data=(test_data, y_test))
+datagen.fit(x_train)
+bottleneck_features_train = base_model.predict_generator(
+    datagen.flow(x_train, y_train, batch_size=32), x_train.shape[1:])
+np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
+bottleneck_features_validation = base_model.predict_generator(
+    datagen.flow(x_test, y_test, batch_size=32), x_test.shape[1:])
+np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_validation)
 
 #-----------------------------VGG---------------------------------#
-
-# datagen.fit(x_train)
-    
-# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-#                     samples_per_epoch=x_train.shape[0], 
-#                     nb_epoch=50, validation_data=(x_test, y_test), 
-#                     nb_val_samples=x_test.shape[0])
-
-
 
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
 
-score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+score = base_model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('pre_model.h5')
-with open('pre_model.json', 'w') as f:
-    f.write(model.to_json())
+# model.save_weights('vgg_model.h5')
+# with open('vgg_model.json', 'w') as f:
+#     f.write(model.to_json())
           
