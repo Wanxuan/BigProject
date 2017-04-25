@@ -162,7 +162,7 @@ model.compile(loss='categorical_crossentropy',
 
 model.fit(x_train, y_train, nb_epoch=50, 
           batch_size=32, verbose=1,
-          validation_split=0.2
+          validation_split=0.2,
           validation_data=(x_test, y_test))
 
 #-----------------------------VGG---------------------------------#
