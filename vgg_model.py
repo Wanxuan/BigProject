@@ -152,6 +152,7 @@ datagen = ImageDataGenerator(
     vertical_flip=False)  # randomly flip images
 
 datagen.fit(x_train)
+datagen.fit(x_test)
 bottleneck_features_train = base_model.predict_generator(
     datagen.flow(x_train, y_train, batch_size=32), x_train.shape[1:])
 np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
