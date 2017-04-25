@@ -102,7 +102,7 @@ print('Test Sample: ', len(x_test), len(y_test))
 
 base_model = VGG16(include_top=False, weights='imagenet')
 x = base_model.output
-x = Flatten()(x)
+x = Flatten(x)
 x = Dense(256, activation='relu')(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
