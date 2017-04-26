@@ -108,7 +108,7 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = Flatten()(x)
-x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.01))(x)
+x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.001))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
@@ -173,7 +173,7 @@ score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('new_model.h5')
-with open('new_model.json', 'w') as f:
+model.save_weights('new1_model.h5')
+with open('new1_model.json', 'w') as f:
         f.write(model.to_json())
           
