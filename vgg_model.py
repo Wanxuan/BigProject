@@ -6,7 +6,7 @@ cifar_10模型跑15次就差不多没什么大变化了，15次loss是0.429，ac
 '''
 
 import numpy as np
-import pickle, h5py
+import pickle, h5py, time
 
 import keras
 from keras.applications.vgg16 import VGG16
@@ -65,6 +65,8 @@ file.close()
 print('Start Single Run')
 print('Train Sample: ', x_train.shape, len(y_train))
 print('Test Sample: ', x_test.shape, len(y_test))
+
+start = time.clock()
 # print('Train drivers: ', unique_list_train)
 # print('Test drivers: ', unique_list_valid)
 
@@ -165,11 +167,13 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
 
+end = time.clock()
+print('Running time: %s Seconds'%(end-start))
 score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
 print('Test score(val_loss): %.4f' % score[0])  # loss损失
 print('Test accuracy: %.4f' % score[1]) # 精度acc
 
 model.save_weights('new_model.h5')
 with open('new_model.json', 'w') as f:
-    f.write(model.to_json())
+        f.write(model.to_json())
           
