@@ -89,7 +89,7 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
 
    
-opt = keras.optimizers.rmsprop(lr=0.0001, decay=1e-6)
+opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, verbose=0, mode='auto')
 tensorBoard = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
