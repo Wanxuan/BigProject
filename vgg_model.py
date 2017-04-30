@@ -94,8 +94,8 @@ earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, verbos
 tensorBoard = keras.callbacks.TensorBoard(log_dir='./logs', histogram_freq=0)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=5000, callbacks=[earlyStop, tensorBoard],
-                    nb_epoch=200, validation_data=(x_test, y_test), 
+                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, tensorBoard],
+                    nb_epoch=50, validation_data=(x_test, y_test), 
                     nb_val_samples=x_test.shape[0])
 
 # for i, layer in enumerate(base_model.layers):
