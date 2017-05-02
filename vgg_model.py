@@ -25,8 +25,8 @@ num_classes = 10
 driver_pkl = open('driver.pkl', 'rb')
 driver_id, unique_drivers = pickle.load(driver_pkl)
 file = h5py.File('train.h5', 'r')
-x_train = file['data'][:]
-y_train = file['label'][:]
+data = file['data'][:]
+label = file['label'][:]
 file.close()
 
 # file = h5py.File('test.h5', 'r')
