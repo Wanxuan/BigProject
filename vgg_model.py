@@ -91,14 +91,14 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
 
 datagen.fit(x_train)   
-opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
-# earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
+opt = keras.optimizers.SGD(lr=1e-5, momentum=0.9)
+earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
 
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0]//batch_size,
-                    nb_epoch=100, validation_data=(x_test, y_test)) 
-#                     nb_val_samples=x_test.shape[0])
+                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop]
+                    nb_epoch=20, validation_data=(x_test, y_test), 
+                    nb_val_samples=x_test.shape[0])
 
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
