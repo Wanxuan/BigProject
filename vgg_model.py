@@ -29,17 +29,17 @@ x_train = file['data'][:]
 y_train = file['label'][:]
 file.close()
 
-file = h5py.File('test.h5', 'r')
-x_test = file['X_test'][:]
-y_test = file['y_test'][:]
-file.close()
+# file = h5py.File('test.h5', 'r')
+# x_test = file['X_test'][:]
+# y_test = file['y_test'][:]
+# file.close()
 
-# def split_validation_set(train, target, test_size):
-# #     random_state = 51
-#     X_train, X_test, y_train, y_test = train_test_split(train, target, test_size=test_size)
-#     return X_train, X_test, y_train, y_test
+def split_validation_set(train, target, test_size):
+#     random_state = 51
+        X_train, X_test, y_train, y_test = train_test_split(train, target, test_size=test_size)
+        return X_train, X_test, y_train, y_test
 
-# x_train, x_test, y_train, y_test = split_validation_set(data, label, 0.2)
+x_train, x_val, y_train, y_val = split_validation_set(data, label, 0.1)
 # def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
 #     data = []
 #     target = []
@@ -64,7 +64,7 @@ file.close()
 
 print('Start Single Run')
 print('Train Sample: ', x_train.shape, len(y_train))
-print('Test Sample: ', x_test.shape, len(y_test))
+print('Validation Sample: ', x_val.shape, len(y_val))
 
 start = time.clock()
 # print('Train drivers: ', unique_list_train)
@@ -91,23 +91,23 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
 
 datagen.fit(x_train)   
-opt = keras.optimizers.SGD(lr=1e-5, momentum=0.9)
+opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
 
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], callbacks=[earlyStop],
-                    nb_epoch=20, validation_data=(x_test, y_test), 
-                    nb_val_samples=x_test.shape[0])
+                    nb_epoch=20, validation_data=(x_val, y_val), 
+                    nb_val_samples=x_val.shape[0])
 
 # for i, layer in enumerate(base_model.layers):
 #     print(i, layer.name)
 
 end = time.clock()
 print('Running time: %s Seconds'%(end-start))
-score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-print('Test score(val_loss): %.4f' % score[0])  # loss损失
-print('Test accuracy: %.4f' % score[1]) # 精度acc
+score = model.evaluate(x_val, y_val, verbose=1) # 评估测试集loss损失和精度acc
+print('Validation score(val_loss): %.4f' % score[0])  # loss损失
+print('Validation accuracy: %.4f' % score[1]) # 精度acc
 
 model.save_weights('new3_model.h5')
 with open('new3_model.json', 'w') as f:
