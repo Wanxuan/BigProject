@@ -81,16 +81,13 @@ prediction = Dense(10, activation='softmax')(x)
 model = Model(input=base_model.input, output=prediction)
 
 datagen = ImageDataGenerator(
-        featurewise_center=True,
-        featurewise_std_normalization=True,
-        rotation_range=20,
+        rotation_range=40,
         width_shift_range=0.2,
         height_shift_range=0.2,
-#         shear_range=0.2,
-#         zoom_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
         horizontal_flip=True)
 
-datagen.fit(x_train)   
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
 
