@@ -1,5 +1,5 @@
 import numpy as np
-import h5py, time
+import pickle, h5py, time
 
 import keras
 from keras.preprocessing.image import ImageDataGenerator
