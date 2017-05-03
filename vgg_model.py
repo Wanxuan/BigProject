@@ -45,10 +45,10 @@ def copy_selected_drivers(train_data, train_target, driver_id, driver_list):
         target = []
         index = []
         for i in range(len(driver_id)):
-        if driver_id[i] in driver_list:
-                data.append(train_data[i])
-                target.append(train_target[i])
-                index.append(i)
+                if driver_id[i] in driver_list:
+                        data.append(train_data[i])
+                        target.append(train_target[i])
+                        index.append(i)
         data = np.array(data, dtype=np.float32)
         target = np.array(target, dtype=np.float32)
         index = np.array(index, dtype=np.uint32)
