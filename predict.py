@@ -11,7 +11,8 @@ img_cols = 320
 num_epochs = 50
 
 file = h5py.File('final_test.h5', 'r')
-x_test = file['x_test'][:]
+x_test = file['test'][:]
+test_id = file['test_id'][:]
 file.close()
 
 #读取model  
