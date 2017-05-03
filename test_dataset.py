@@ -9,6 +9,31 @@ color_type = 3
 num_classes = 10
 batch_size = 32
 
+def formatSize(bytes):
+    try:
+        bytes = float(bytes)
+        kb = bytes / 1024
+    except:
+        print("传入的字节格式不对")
+        return "Error"
+
+    if kb >= 1024:
+        M = kb / 1024
+        if M >= 1024:
+            G = M / 1024
+            return G
+        else:
+            return M
+    else:
+        return kb
+
+def getDocSize(path):
+    try:
+        size = os.path.getsize(path)
+        return formatSize(size)
+    except Exception as err:
+        print(err)
+
 def get_im_cv2(path, img_rows, img_cols, color_type=3):
     if color_type == 1:
         img = cv2.imread(path, 0)
@@ -18,7 +43,7 @@ def get_im_cv2(path, img_rows, img_cols, color_type=3):
     resized = cv2.resize(img, (img_cols, img_rows))
     return resized
 
-def load_train(img_rows, img_cols, color_type=3):
+def load_test(img_rows, img_cols, color_type=3):
 
     print('Read test images')
     start_time = time.time()
@@ -40,14 +65,14 @@ def load_train(img_rows, img_cols, color_type=3):
         test_id.append(flbase)
         total += 1
         if total%thr == 0:
-          print('Read {} images from {}'.format(total, len(files)))
+            print('Read {} images from {}'.format(total, len(files)))
           
     print('Read test data time: {} seconds'.format(round(time.time() - start_time, 2)))
     return test, test_id
 
-def read_and_normalize_train_data():
+def read_and_normalize_data(img_rows, img_cols, color_type):
   
-    test, test_id = load_train(img_rows, img_cols, color_type)
+    test, test_id = load_test(img_rows, img_cols, color_type)
     test = np.array(test, dtype=np.float32)
     test = test.reshape(test.shape[0], img_rows, img_cols, color_type)
     test /= 255
@@ -55,7 +80,7 @@ def read_and_normalize_train_data():
     print('Test shape:', test.shape)
     return test, test_id
 
-test, test_id = read_and_normalize_data()
+test, test_id = read_and_normalize_data(img_rows, img_cols, color_type)
 
 test = h5py.File('final_test.h5', 'w')
 test.create_dataset('test', data=test, compression="gzip")
