@@ -29,10 +29,10 @@ data = file['data'][:]
 label = file['label'][:]
 file.close()
 
-# file = h5py.File('test.h5', 'r')
-# x_test = file['X_test'][:]
-# y_test = file['y_test'][:]
-# file.close()
+file = h5py.File('test.h5', 'r')
+x_test = file['X_test'][:]
+y_test = file['y_test'][:]
+file.close()
 
 def split_validation_set(train, target, test_size):
 #     random_state = 51
@@ -94,7 +94,7 @@ earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbo
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], callbacks=[earlyStop],
-                    nb_epoch=20, validation_data=(x_val, y_val), 
+                    nb_epoch=50, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
 # for i, layer in enumerate(base_model.layers):
@@ -102,7 +102,7 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
 
 end = time.clock()
 print('Running time: %s Seconds'%(end-start))
-score = model.evaluate(x_val, y_val, verbose=1) # 评估测试集loss损失和精度acc
+score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
 print('Validation score(val_loss): %.4f' % score[0])  # loss损失
 print('Validation accuracy: %.4f' % score[1]) # 精度acc
 
