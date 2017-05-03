@@ -59,8 +59,8 @@ print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
 #读取model  
-model = model_from_json(open('new2_model.json').read())  
-model.load_weights('new2_model.h5')
+model = model_from_json(open('new3_model.json').read())  
+model.load_weights('new3_model.h5')
 
 datagen = ImageDataGenerator(
         rotation_range=40,
