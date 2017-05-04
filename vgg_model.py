@@ -74,7 +74,7 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = Flatten()(x)
-x = Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.0001), activity_regularizer=regularizers.l1(0.01))(x)
+x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001), activity_regularizer=regularizers.l1(0.01))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
