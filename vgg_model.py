@@ -70,7 +70,7 @@ start = time.clock()
 print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
-input_tensor = Input(shape=x_train.shape[1:])
+input_tensor = Input(Dropout(0.5, shape=x_train.shape[1:]))
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = Flatten()(x)
@@ -88,8 +88,8 @@ datagen = ImageDataGenerator(
         zoom_range=0.2,
         horizontal_flip=True)
 
-# opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
-opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
+opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
+# opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
 # checkPoint = keras.callbacks.ModelCheckpoint('/home/ubuntu', monitor='val_loss', verbose=0, 
 #                                              save_best_only=False, save_weights_only=False, mode='auto', period=5)
