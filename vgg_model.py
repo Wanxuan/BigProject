@@ -73,12 +73,15 @@ print('Test drivers: ', unique_list_valid)
 input_tensor = Input(shape=x_train.shape[1:])
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
+x = Dropout(0.5)(x)
 x = Flatten()(x)
-x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001), activity_regularizer=regularizers.activity_l2(0.01))(x)
+x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
+
+
 
 datagen = ImageDataGenerator(
         rotation_range=40,
