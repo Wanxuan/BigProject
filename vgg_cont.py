@@ -3,6 +3,7 @@ import pickle, h5py, time
 
 import keras
 from keras.preprocessing.image import ImageDataGenerator
+from keras.models import model_from_json
 from keras.models import Sequential, Model
 from keras import optimizers
 from sklearn.model_selection import train_test_split
