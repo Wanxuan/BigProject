@@ -70,7 +70,8 @@ datagen = ImageDataGenerator(
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True)
-        
+ 
+opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0],
