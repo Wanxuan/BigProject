@@ -94,7 +94,7 @@ datagen = ImageDataGenerator(
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 # opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
-filepath=weights.{epoch:.2d}-{val_loss:.2f}.h5
+filepath='weights.{epoch:.2d}-{val_loss:.2f}.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
