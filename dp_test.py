@@ -63,7 +63,7 @@ def create_model(dropout_rate = 0.0, weight_constraint=0):
         input_tensor = Input(shape=x_train.shape[1:])
         base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
         x = base_model.output
-        x = Dropout(0.5)(x)
+        x = Dropout(dropout_rate)(x)
         x = Flatten()(x)
         x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001), W_constraint=maxnorm(weight_constraint))(x)
         x = Dropout(0.5)(x)
