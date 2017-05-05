@@ -93,13 +93,12 @@ datagen = ImageDataGenerator(
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 # opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, verbose=0, mode='auto')
-# checkPoint = keras.callbacks.ModelCheckpoint('/home/ubuntu', monitor='val_loss', verbose=0, 
-#                                              save_best_only=False, save_weights_only=False, mode='auto', period=5)
+earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
+checkPoint = keras.callbacks.ModelCheckpoint(filepath=weights.{epoch:.2d}-{val_loss:.2f}.h5, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop],
-                    nb_epoch=50, validation_data=(x_val, y_val), 
+                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
+                    nb_epoch=30, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
 # for i, layer in enumerate(base_model.layers):
