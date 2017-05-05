@@ -71,7 +71,7 @@ print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
 input_tensor = Input(shape=x_train.shape[1:])
-base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
+base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor, pooling='avg')
 x = base_model.output
 x = Dropout(0.5)(x)
 x = Flatten()(x)
