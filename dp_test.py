@@ -77,7 +77,7 @@ def create_model(dropout_rate = 0.0, weight_constraint=0):
 
 np.random.seed(7)
 
-model = KerasClassifier(build_fc=create_model, {'nb_epoch':100, 'batch_size':32})
+model = KerasClassifier(build_fc=create_model)
 weight_constraint = [1, 2, 3, 4, 5]
 dropout_rate = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 param_grid = dict(dropout_rate=dropout_rate, weight_constraint=weight_constraint)
