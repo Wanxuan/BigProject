@@ -74,7 +74,8 @@ input_tensor = Input(shape=x_train.shape[1:])
 base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = Flatten()(x)
-x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
+# x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
+x = Dense(512, activation='relu')(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
@@ -92,7 +93,7 @@ datagen = ImageDataGenerator(
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 # opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
-earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
+earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, verbose=0)
 filepath='weights_best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
@@ -110,7 +111,7 @@ score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和
 print('Validation score(val_loss): %.4f' % score[0])  # loss损失
 print('Validation accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('new4_model.h5')
-with open('new4_model.json', 'w') as f:
+model.save_weights('resNet_model.h5')
+with open('resNet_model.json', 'w') as f:
         f.write(model.to_json())
           
