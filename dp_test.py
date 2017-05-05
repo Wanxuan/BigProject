@@ -9,6 +9,7 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten, Input
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras import optimizers, regularizers
+from keras.constraints import maxnorm
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.grid_search import GridSearchCV
 
@@ -58,13 +59,13 @@ start = time.clock()
 print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
-def create_model(dropout_rate = 0.0, weight=0.01):
+def create_model(dropout_rate = 0.0, weight_constraint=0):
         input_tensor = Input(shape=x_train.shape[1:])
         base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor)
         x = base_model.output
         x = Dropout(0.5)(x)
         x = Flatten()(x)
-        x = Dense(512, activation='relu', W_regularizer=regularizers.l2(weight))(x)
+        x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001), W_constraint=maxnorm(weight_constraint))(x)
         x = Dropout(0.5)(x)
         prediction = Dense(10, activation='softmax')(x)
 
@@ -77,7 +78,7 @@ def create_model(dropout_rate = 0.0, weight=0.01):
 np.random.seed(7)
 
 model = KerasClassifier(build_fc=create_model, nb_epoch=100, batch_size=batch_size, verbose=0)
-weight = [0.01, 0.001, 0.0001, 0.00001]
+weight_constraint = [1, 2, 3, 4, 5]
 dropout_rate = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
 param_grid = dict(dropout_rate=dropout_rate, weight_constraint=weight_constraint)
 grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1)
