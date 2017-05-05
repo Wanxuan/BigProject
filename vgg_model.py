@@ -9,7 +9,7 @@ import numpy as np
 import pickle, h5py, time
 
 import keras
-from keras.applications.vgg16 import VGG16
+from keras.applications.inception_v3 import InceptionV3
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
@@ -71,9 +71,9 @@ print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
 input_tensor = Input(shape=x_train.shape[1:])
-base_model = VGG16(include_top=False, weights='imagenet', input_tensor=input_tensor, pooling='avg')
+base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=input_tensor, pooling='avg')
 x = base_model.output
-x = Dropout(0.5)(x)
+# x = Dropout(0.5)(x)
 x = Flatten()(x)
 x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
 x = Dropout(0.5)(x)
