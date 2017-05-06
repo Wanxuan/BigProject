@@ -83,16 +83,16 @@ def identity_block(x,nb_filter,kernel_size=3):
         out = Activation('relu')(out)
         return out
 
-def conv_block(x,nb_filter,kernel_size=3):
+def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
         """
         conv_block is the block that has a conv layer at shortcut
         """
         k1,k2,k3 = nb_filter
-        out = Convolution2D(k1,1,1)(x)
+        out = Convolution2D(k1,1,1,subsample=strides)(x)
         out = BatchNormalization()(out)
         out = Activation('relu')(out)
 
-        out = Convolution2D(k2,kernel_size,kernel_size)(out)
+        out = Convolution2D(k2,kernel_size,kernel_size,border_mode='same')(out)
         out = BatchNormalization()(out)
         out = Activation('relu')(out)
 
