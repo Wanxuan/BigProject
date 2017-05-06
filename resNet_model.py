@@ -76,7 +76,7 @@ model = Model(input=base_model.input, output=prediction)
 for layer in base_model.layers:
         layer.trainable = False
 
-model.compile(optimizer=keras.optimizers.SGD, loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
 datagen = ImageDataGenerator(
         rotation_range=40,
