@@ -1,6 +1,5 @@
 from keras.layers import Convolution2D, MaxPooling2D, ZeroPadding2D, AveragePooling2D
-from keras.layers.core import Dense, Activation, Flatten
-from keras.layers.normalization import BatchNormalization
+from keras.layers.core import Dense, Activation, Flatten, Dropout
 from keras.models import Model, Sequential
 from keras.layers import Input
 from keras.utils import np_utils
