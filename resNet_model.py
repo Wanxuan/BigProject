@@ -94,7 +94,7 @@ model = Model(input=base_model.input, output=prediction)
 # for i, layer in enumerate(base_model.layers):
 #         print(i, layer.name)
 
-for layer in model.layers[:172]:
+for layer in model.layers[:174]:
         layer.trainable = False
 # for layer in model.layers[172:]:
 #         layer.trainable = True
