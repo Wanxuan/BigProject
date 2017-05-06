@@ -114,7 +114,7 @@ out = BatchNormalization()(out)
 out = Activation('relu')(out)
 out = MaxPooling2D((3,3),strides=(2,2))(out)
 
-out = conv_block(out,[64,64,256])
+out = conv_block(out,[64,64,256], strides=(1, 1))
 out = identity_block(out,[64,64,256])
 out = identity_block(out,[64,64,256])
 
