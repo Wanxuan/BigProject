@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 import keras.backend as K
 import numpy as np
 import pickle, h5py, time
+from keras.utils.data_utils import get_file
 
 batch_size = 32
 num_classes = 10
@@ -88,7 +89,7 @@ def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
         conv_block is the block that has a conv layer at shortcut
         """
         k1,k2,k3 = nb_filter
-        out = Convolution2D(k1,1,1,subsample=strides)(x)
+        out = Convolution2D(k1,1,1,strides=strides)(x)
         out = BatchNormalization()(out)
         out = Activation('relu')(out)
 
@@ -99,7 +100,7 @@ def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
         out = Convolution2D(k3,1,1)(out)
         out = BatchNormalization()(out)
         
-        x = Convolution2D(k3,1,1)(x)
+        x = Convolution2D(k3,1,1,strides=strides)(x)
         x = BatchNormalization()(x)
 
         out = merge([out,x],mode='sum')
@@ -109,7 +110,7 @@ def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
 
 inp = Input(shape=x_train.shape[1:])
 out = ZeroPadding2D((3,3))(inp)
-out = Convolution2D(64,7,7,subsample=(2,2))(out)
+out = Convolution2D(64,7,7,strides=(2,2))(out)
 out = BatchNormalization()(out)
 out = Activation('relu')(out)
 out = MaxPooling2D((3,3),strides=(2,2))(out)
@@ -134,12 +135,17 @@ out = conv_block(out,[512,512,2048])
 out = identity_block(out,[512,512,2048])
 out = identity_block(out,[512,512,2048])
 
-out = AveragePooling2D((7,7))(out)
+out = AveragePooling2D((7,7),name='avg_pool')(out)
 out = Flatten()(out)
 out = Dense(10,activation='softmax')(out)
 
 model = Model(inp,out)
-
+WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5'
+weights_path = get_file('resnet50_weights_tf_dim_ordering_tf_kernels_notop.h5',
+                                    WEIGHTS_PATH_NO_TOP,
+                                    cache_subdir='models',
+                                    md5_hash='a268eb855778b3df3c7506639542a6af')
+model.load_weights(weights_path)
 # x = base_model.output
 # x = Flatten()(x)
 # x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
