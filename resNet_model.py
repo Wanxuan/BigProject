@@ -73,23 +73,23 @@ x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 model = Model(input=base_model.input, output=prediction)
 
-# for layer in base_model.layers:
-#         layer.trainable = False
+for layer in base_model.layers:
+        layer.trainable = False
 
-# model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# datagen = ImageDataGenerator(
-#         rotation_range=40,
-#         width_shift_range=0.2,
-#         height_shift_range=0.2,
-#         shear_range=0.2,
-#         zoom_range=0.2,
-#         horizontal_flip=True)
+datagen = ImageDataGenerator(
+        rotation_range=40,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        horizontal_flip=True)
 
-# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-#                     samples_per_epoch=x_train.shape[0],
-#                     nb_epoch=1, validation_data=(x_val, y_val), 
-#                     nb_val_samples=x_val.shape[0])
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+                    samples_per_epoch=x_train.shape[0],
+                    nb_epoch=1, validation_data=(x_val, y_val), 
+                    nb_val_samples=x_val.shape[0])
 
 # for i, layer in enumerate(base_model.layers):
 #         print(i, layer.name)
