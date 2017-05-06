@@ -94,7 +94,7 @@ datagen = ImageDataGenerator(
         zoom_range=0.2,
         horizontal_flip=True)
 
-opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
+opt = keras.optimizers.SGD(lr=1e-2, momentum=0.9)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
 filepath='best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
