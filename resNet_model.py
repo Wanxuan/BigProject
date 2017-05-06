@@ -1,7 +1,7 @@
 from keras.layers import Convolution2D, MaxPooling2D, ZeroPadding2D, AveragePooling2D
 from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.normalization import BatchNormalization
-from keras.models import Model
+from keras.models import Model, Sequential
 from keras.layers import Input
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
@@ -63,16 +63,26 @@ start = time.clock()
 print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
-input_tensor = Input(shape=x_train.shape[1:])
-base_model = ResNet50(include_top=False, weights='weights_best.h5', input_tensor=input_tensor)
-x = base_model.output
-x = Flatten()(x)
-x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
-x = Dropout(0.5)(x)
-prediction = Dense(10, activation='softmax')(x)
+# input_tensor = Input(shape=x_train.shape[1:])
+# base_model = ResNet50(include_top=False, weights='weights_best.h5', input_tensor=input_tensor)
+# x = base_model.output
+# x = Flatten()(x)
+# x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
+# x = Dropout(0.5)(x)
+# prediction = Dense(10, activation='softmax')(x)
+# model = Model(input=base_model.input, output=prediction)
 
-model = Model(input=base_model.input, output=prediction)
+#读取model  
+model = model_from_json(open('new4_model.json').read())  
 
+top_model = Sequential()
+top_model.add(Flatten(input_shape=model.output_shape[1:]))
+top_model.add(Dense(512, activation='relu'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(10, activation='softmax'))
+
+top_model.load_weights('weights_best.h5')
+model.add(top_model)
 
 
 datagen = ImageDataGenerator(
@@ -85,7 +95,7 @@ datagen = ImageDataGenerator(
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
-filepath='weights_best.h5'
+filepath='best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
