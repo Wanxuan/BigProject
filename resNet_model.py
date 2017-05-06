@@ -1,5 +1,5 @@
 from keras.layers import merge
-from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D, AveragePooling2D
+from keras.layers import Convolution2D, MaxPooling2D, ZeroPadding2D, AveragePooling2D
 from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.normalization import BatchNormalization
 from keras.models import Model
