@@ -87,7 +87,7 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
 
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
+                    samples_per_epoch=x_train.shape[0], c
                     nb_epoch=1, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
