@@ -73,6 +73,11 @@ x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 model = Model(input=base_model.input, output=prediction)
 
+for layer in base_model.layers:
+        layer.trainable = False
+
+model.compile(optimizer=keras.optimizers.SGD, loss='categorical_crossentropy', metrics=['accuracy'])
+
 datagen = ImageDataGenerator(
         rotation_range=40,
         width_shift_range=0.2,
@@ -81,23 +86,31 @@ datagen = ImageDataGenerator(
         zoom_range=0.2,
         horizontal_flip=True)
 
-opt = keras.optimizers.SGD(lr=1e-2, momentum=0.9)
-earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
-filepath='weight_best.h5'
-checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
-model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
                     samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
-                    nb_epoch=30, validation_data=(x_val, y_val), 
+                    nb_epoch=1, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
-end = time.clock()
-print('Running time: %s Seconds'%(end-start))
-score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-print('Validation score(val_loss): %.4f' % score[0])  # loss损失
-print('Validation accuracy: %.4f' % score[1]) # 精度acc
+for i, layer in enumerate(base_model.layers):
+        print(i, layer.name)
 
-model.save_weights('resNet_model.h5')
-with open('resNet_model.json', 'w') as f:
-        f.write(model.to_json())
+# opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
+# earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
+# filepath='weight_best.h5'
+# checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
+# model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
+# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+#                     samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
+#                     nb_epoch=30, validation_data=(x_val, y_val), 
+#                     nb_val_samples=x_val.shape[0])
+
+# end = time.clock()
+# print('Running time: %s Seconds'%(end-start))
+# score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+# print('Validation score(val_loss): %.4f' % score[0])  # loss损失
+# print('Validation accuracy: %.4f' % score[1]) # 精度acc
+
+# model.save_weights('resNet_model.h5')
+# with open('resNet_model.json', 'w') as f:
+#         f.write(model.to_json())
           
