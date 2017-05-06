@@ -8,6 +8,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras import optimizers, regularizers
 from sklearn.model_selection import train_test_split
 from keras.applications.resnet50 import ResNet50
+from keras.models import model_from_json
 import numpy as np
 import pickle, h5py, time
 
