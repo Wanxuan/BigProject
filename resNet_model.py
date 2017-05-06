@@ -89,7 +89,7 @@ def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
         conv_block is the block that has a conv layer at shortcut
         """
         k1,k2,k3 = nb_filter
-        out = Convolution2D(k1,1,1,strides=strides)(x)
+        out = Convolution2D(k1,1,1,subsample=strides)(x)
         out = BatchNormalization()(out)
         out = Activation('relu')(out)
 
@@ -100,7 +100,7 @@ def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
         out = Convolution2D(k3,1,1)(out)
         out = BatchNormalization()(out)
         
-        x = Convolution2D(k3,1,1,strides=strides)(x)
+        x = Convolution2D(k3,1,1,subsample=strides)(x)
         x = BatchNormalization()(x)
 
         out = merge([out,x],mode='sum')
@@ -110,7 +110,7 @@ def conv_block(x,nb_filter,kernel_size=3, strides=(2, 2)):
 
 inp = Input(shape=x_train.shape[1:])
 out = ZeroPadding2D((3,3))(inp)
-out = Convolution2D(64,7,7,strides=(2,2))(out)
+out = Convolution2D(64,7,7,subsample=(2,2))(out)
 out = BatchNormalization()(out)
 out = Activation('relu')(out)
 out = MaxPooling2D((3,3),strides=(2,2))(out)
