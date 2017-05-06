@@ -74,7 +74,7 @@ print('Test drivers: ', unique_list_valid)
 
 #读取model  
 model = model_from_json(open('new4_model.json').read())  
-
+print(model.layers)
 top_model = Sequential()
 top_model.add(Flatten(input_shape=model.output_shape[1:]))
 top_model.add(Dense(512, activation='relu'))
