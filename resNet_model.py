@@ -1,23 +1,16 @@
-'''
-It gets down to 0.44 test logloss in 10 epochs, and down to 0.33 after 20 epochs.
-It gets 90.33% accuracy in 20 epochs and does not change too much after 20 epochs.
-cifar_10模型的基础上加两层model.add(Conv2D(64, 3, 3))跑25次，loss达到0.31，acc达到91%。
-cifar_10模型跑15次就差不多没什么大变化了，15次loss是0.429，acc0.872；20次loss0.401，acc是0.884
-'''
-
-import numpy as np
-import pickle, h5py, time
-
-import keras
-from keras.applications.resnet50 import ResNet50
+from keras.layers import merge
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
+from keras.layers.core import Dense, Activation, Flatten
+from keras.layers.normalization import BatchNormalization
+from keras.models import Model
+from keras.layers import Input
 from keras.utils import np_utils
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, Model
-from keras.layers import Dense, Dropout, Activation, Flatten, Input
-from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
-from keras import optimizers
-from keras import regularizers
+from keras import optimizers, regularizers
 from sklearn.model_selection import train_test_split
+import keras.backend as K
+import numpy as np
+import pickle, h5py, time
 
 batch_size = 32
 num_classes = 10
@@ -70,16 +63,90 @@ start = time.clock()
 print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
-input_tensor = Input(shape=x_train.shape[1:])
-base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input_tensor)
-x = base_model.output
-x = Flatten()(x)
-x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
-x = Dropout(0.5)(x)
-prediction = Dense(10, activation='softmax')(x)
+def identity_block(x,nb_filter,kernel_size=3):
+        """
+        identity_block is the block that has no conv layer at shortcut
+        """
+        k1,k2,k3 = nb_filter
+        out = Convolution2D(k1,1,1)(x)
+        out = BatchNormalization()(out)
+        out = Activation('relu')(out)
 
-model = Model(input=base_model.input, output=prediction)
+        out = Convolution2D(k2,kernel_size,kernel_size,border_mode='same')(out)
+        out = BatchNormalization()(out)
+        out = Activation('relu')(out)
 
+        out = Convolution2D(k3,1,1)(out)
+        out = BatchNormalization()(out)
+
+        out = merge([out,x],mode='sum')
+        out = Activation('relu')(out)
+        return out
+
+def conv_block(x,nb_filter,kernel_size=3):
+        """
+        conv_block is the block that has a conv layer at shortcut
+        """
+        k1,k2,k3 = nb_filter
+        out = Convolution2D(k1,1,1)(x)
+        out = BatchNormalization()(out)
+        out = Activation('relu')(out)
+
+        out = Convolution2D(k2,kernel_size,kernel_size)(out)
+        out = BatchNormalization()(out)
+        out = Activation('relu')(out)
+
+        out = Convolution2D(k3,1,1)(out)
+        out = BatchNormalization()(out)
+        
+        x = Convolution2D(k3,1,1)(x)
+        x = BatchNormalization()(x)
+
+        out = merge([out,x],mode='sum')
+        out = Activation('relu')(out)
+        return out
+
+
+inp = Input(shape=x_train.shape[1:])
+out = ZeroPadding2D((3,3))(inp)
+out = Convolution2D(64,7,7,subsample=(2,2))(out)
+out = BatchNormalization()(out)
+out = Activation('relu')(out)
+out = MaxPooling2D((3,3),strides=(2,2))(out)
+
+out = conv_block(out,[64,64,256])
+out = identity_block(out,[64,64,256])
+out = identity_block(out,[64,64,256])
+
+out = conv_block(out,[128,128,512])
+out = identity_block(out,[128,128,512])
+out = identity_block(out,[128,128,512])
+out = identity_block(out,[128,128,512])
+
+out = conv_block(out,[256,256,1024])
+out = identity_block(out,[256,256,1024])
+out = identity_block(out,[256,256,1024])
+out = identity_block(out,[256,256,1024])
+out = identity_block(out,[256,256,1024])
+out = identity_block(out,[256,256,1024])
+
+out = conv_block(out,[512,512,2048])
+out = identity_block(out,[512,512,2048])
+out = identity_block(out,[512,512,2048])
+
+out = AveragePooling2D((7,7))(out)
+out = Flatten()(out)
+out = Dense(10,activation='softmax')(out)
+
+model = Model(inp,out)
+
+# x = base_model.output
+# x = Flatten()(x)
+# x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
+# x = Dropout(0.5)(x)
+# prediction = Dense(10, activation='softmax')(x)
+
+# model = Model(input=base_model.input, output=prediction)
 
 
 datagen = ImageDataGenerator(
@@ -91,7 +158,6 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
-# opt = keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
 filepath='weights_best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
@@ -100,9 +166,6 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
                     samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
                     nb_epoch=30, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
-
-# for i, layer in enumerate(base_model.layers):
-#     print(i, layer.name)
 
 end = time.clock()
 print('Running time: %s Seconds'%(end-start))
