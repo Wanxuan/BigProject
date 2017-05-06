@@ -65,26 +65,13 @@ print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
 input_tensor = Input(shape=x_train.shape[1:])
-base_model = ResNet50(include_top=False, weights='weights_best.h5', input_tensor=input_tensor)
+base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input_tensor)
 x = base_model.output
 x = Flatten()(x)
 x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 model = Model(input=base_model.input, output=prediction)
-
-# #读取model  
-# model = model_from_json(open('new4_model.json').read())  
-# print(model.layers)
-# top_model = Sequential()
-# top_model.add(Flatten(input_shape=model.output_shape[1:]))
-# top_model.add(Dense(512, activation='relu'))
-# top_model.add(Dropout(0.5))
-# top_model.add(Dense(10, activation='softmax'))
-
-# top_model.load_weights('weights_best.h5')
-# model.add(top_model)
-
 
 datagen = ImageDataGenerator(
         rotation_range=40,
@@ -96,7 +83,7 @@ datagen = ImageDataGenerator(
 
 opt = keras.optimizers.SGD(lr=1e-2, momentum=0.9)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
-filepath='best.h5'
+filepath='weight_best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
