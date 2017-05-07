@@ -74,7 +74,7 @@ x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
-model.load_weights('weight_best.h5')
+model.load_weights('new4_model.h5')
 # for layer in base_model.layers:
 #         layer.trainable = False
 
