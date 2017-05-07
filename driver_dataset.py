@@ -109,7 +109,7 @@ data, label, driver_id, unique_drivers = load_train(img_rows, img_cols, color_ty
 # x_train, y_train, train_index = copy_selected_drivers(data, label, driver_id, unique_list_train)
 # unique_list_test = ['p064', 'p066', 'p072', 'p075', 'p081']
 # x_test, y_test, test_index = copy_selected_drivers(data, label, driver_id, unique_list_test)
-X_train, X_test, y_train, y_test = split_validation_set(train, target, 0.3)
+X_train, X_test, y_train, y_test = split_validation_set(data, label, 0.3)
 X_train, X_test, y_train, y_test = read_and_normalize_train_data(x_train, y_train, x_test, y_test)
     
 # train_driver_id = [driver_id[i] for i in train_index]
