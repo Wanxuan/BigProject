@@ -80,7 +80,7 @@ model = Model(input=base_model.input, output=prediction)
 
 # build a classifier model to put on top of the convolutional model
 top_model = Sequential()
-top_model.add(Flatten(input_shape=model.output_shape[1:]))
+top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
 top_model.add(Dense(512, activation='relu'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(10, activation='softmax'))
