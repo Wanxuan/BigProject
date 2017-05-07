@@ -74,21 +74,20 @@ x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
-model.load_weights('new4_model.h5')
+model.load_weights('weights_best.h5')
 # for layer in base_model.layers:
 #         layer.trainable = False
 
 # model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
 datagen = ImageDataGenerator(
-        zca_whitening=True,
         rotation_range=40,
         width_shift_range=0.2,
         height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
+        shear_range=0.4,
+        zoom_range=0.4,
         horizontal_flip=True)
-datagen.fit(x_val)
+
 # earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
 # filepath = 'pre_weight.h5'
 # checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
@@ -106,12 +105,12 @@ for layer in model.layers[106:]:
         layer.trainable = True
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
-earlyStop = keras.callbacks.EarlyStopping(monitor='val_acc', patience=0, verbose=0)
+# earlyStop = keras.callbacks.EarlyStopping(monitor='val_acc', patience=0, verbose=0)
 filepath='weights_best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
+                    samples_per_epoch=x_train.shape[0], callbacks=[checkPoint],
                     nb_epoch=10, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
