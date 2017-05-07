@@ -69,12 +69,12 @@ base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=input_
 x = base_model.output
 x = Dropout(0.5)(x)
 x = Flatten()(x)
-x = Dense(512, activation='relu', W_regularizer=regularizers.l1(0.0001))(x)
+x = Dense(512, activation='relu', W_regularizer=regularizers.l1_l2(0.0001))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
-model.load_weights('weights_best.h5')
+# model.load_weights('weights_best.h5')
 # for layer in base_model.layers:
 #         layer.trainable = False
 
@@ -84,8 +84,8 @@ datagen = ImageDataGenerator(
         rotation_range=40,
         width_shift_range=0.2,
         height_shift_range=0.2,
-        shear_range=0.4,
-        zoom_range=0.4,
+        shear_range=0.2,
+        zoom_range=0.2,
         horizontal_flip=True)
 
 # earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
