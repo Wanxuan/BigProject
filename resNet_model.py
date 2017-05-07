@@ -88,7 +88,7 @@ datagen = ImageDataGenerator(
         shear_range=0.2,
         zoom_range=0.2,
         horizontal_flip=True)
-datagen.fit(x_train)
+datagen.fit(x_val)
 # earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
 # filepath = 'pre_weight.h5'
 # checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
