@@ -106,7 +106,7 @@ for layer in model.layers[106:]:
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
 earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
-filepath='weight_best.h5'
+filepath='weights_best.h5'
 checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
