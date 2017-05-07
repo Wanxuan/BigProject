@@ -84,10 +84,10 @@ def read_and_normalize_train_data(x_train, y_train, x_test, y_test):
 
     X_train = np.array(x_train, dtype=np.float32)
     y_train = np.array(y_train, dtype=np.uint8)
-    X_train = X_train.reshape(x_train.shape[0], img_rows, img_cols, color_type)
+    X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, color_type)
     X_test = np.array(x_test, dtype=np.float32)
     y_test = np.array(y_test, dtype=np.uint8)
-    X_test = X_test.reshape(x_test.shape[0], img_rows, img_cols, color_type)
+    X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, color_type)
     y_train = np_utils.to_categorical(y_train, num_classes)
     y_test = np_utils.to_categorical(y_test, num_classes)
     
