@@ -81,7 +81,6 @@ model.load_weights('weight_best.h5')
 # model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
 datagen = ImageDataGenerator(
-        zca_whitening=True,
         rotation_range=40,
         width_shift_range=0.2,
         height_shift_range=0.2,
