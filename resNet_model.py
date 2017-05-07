@@ -71,7 +71,7 @@ x = Flatten()(x)
 x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
-model.load_weights('pre_weight.h5')
+base_model.load_weights('pre_weight.h5')
 model = Model(input=base_model.input, output=prediction)
 
 # for layer in base_model.layers:
