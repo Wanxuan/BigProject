@@ -86,36 +86,39 @@ datagen = ImageDataGenerator(
         zoom_range=0.2,
         horizontal_flip=True)
 
+earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
+filepath = 'pre_weight.h5'
+checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0],
-                    nb_epoch=1, validation_data=(x_val, y_val), 
+                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
+                    nb_epoch=20, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
-# for i, layer in enumerate(base_model.layers):
-#         print(i, layer.name)
+for i, layer in enumerate(base_model.layers):
+        print(i, layer.name)
 
-for layer in model.layers[:174]:
-        layer.trainable = False
+# for layer in model.layers[:174]:
+#         layer.trainable = False
 # for layer in model.layers[172:]:
 #         layer.trainable = True
 
-opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
-earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
-filepath='weight_best.h5'
-checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
-model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
-model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
-                    nb_epoch=30, validation_data=(x_val, y_val), 
-                    nb_val_samples=x_val.shape[0])
+# opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
+# earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
+# filepath='weight_best.h5'
+# checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
+# model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
+# model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
+#                     samples_per_epoch=x_train.shape[0], callbacks=[earlyStop, checkPoint],
+#                     nb_epoch=30, validation_data=(x_val, y_val), 
+#                     nb_val_samples=x_val.shape[0])
 
-end = time.clock()
-print('Running time: %s Seconds'%(end-start))
-score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-print('Validation score(val_loss): %.4f' % score[0])  # loss损失
-print('Validation accuracy: %.4f' % score[1]) # 精度acc
+# end = time.clock()
+# print('Running time: %s Seconds'%(end-start))
+# score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
+# print('Validation score(val_loss): %.4f' % score[0])  # loss损失
+# print('Validation accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('resNet_model.h5')
-with open('resNet_model.json', 'w') as f:
-        f.write(model.to_json())
+# model.save_weights('resNet_model.h5')
+# with open('resNet_model.json', 'w') as f:
+#         f.write(model.to_json())
           
