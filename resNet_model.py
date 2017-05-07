@@ -71,24 +71,13 @@ x = Flatten()(x)
 x = Dense(512, activation='relu', W_regularizer=regularizers.l2(0.0001))(x)
 x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
+model.load_weights('pre_weight.h5')
 model = Model(input=base_model.input, output=prediction)
 
 # for layer in base_model.layers:
 #         layer.trainable = False
 
 # model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
-
-# build a classifier model to put on top of the convolutional model
-top_model = Sequential()
-top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
-top_model.add(Dense(512, activation='relu'))
-top_model.add(Dropout(0.5))
-top_model.add(Dense(10, activation='softmax'))
-
-top_model.load_weights('pre_weight.h5')
-
-# add the model on top of the convolutional base
-model.add(top_model)
 
 datagen = ImageDataGenerator(
         rotation_range=40,
