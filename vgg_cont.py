@@ -60,10 +60,11 @@ print('Train drivers: ', unique_list_train)
 print('Test drivers: ', unique_list_valid)
 
 #读取model  
-model = model_from_json(open('new3_model.json').read())  
-model.load_weights('new3_model.h5')
+model = model_from_json(open('resNet_model.json').read())  
+model.load_weights('weights_best.h5')
 
 datagen = ImageDataGenerator(
+        zca_whitening=True,
         rotation_range=40,
         width_shift_range=0.2,
         height_shift_range=0.2,
@@ -72,10 +73,12 @@ datagen = ImageDataGenerator(
         horizontal_flip=True)
  
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
+filepath='cont_best.h5'
+checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
 model.compile(optimizer=opt, loss='categorical_crossentropy', metrics=['accuracy'])
 model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size), 
-                    samples_per_epoch=x_train.shape[0],
-                    nb_epoch=20, validation_data=(x_val, y_val), 
+                    samples_per_epoch=x_train.shape[0], callbacks=[checkPoint],
+                    nb_epoch=10, validation_data=(x_val, y_val), 
                     nb_val_samples=x_val.shape[0])
 
 end = time.clock()
@@ -84,6 +87,5 @@ score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和
 print('Validation score(val_loss): %.4f' % score[0])  # loss损失
 print('Validation accuracy: %.4f' % score[1]) # 精度acc
 
-model.save_weights('new3_cont.h5')
-with open('new3_cont.json', 'w') as f:
+with open('cont_best.json', 'w') as f:
         f.write(model.to_json())
