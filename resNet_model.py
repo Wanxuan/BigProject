@@ -73,7 +73,7 @@ x = Dropout(0.5)(x)
 prediction = Dense(10, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=prediction)
-model.load_weights('pre_weight.h5')
+model.load_weights('new4_model.h5')
 # for layer in base_model.layers:
 #         layer.trainable = False
 
@@ -98,9 +98,9 @@ datagen = ImageDataGenerator(
 # for i, layer in enumerate(base_model.layers):
 #         print(i, layer.name)
 
-for layer in model.layers[:164]:
+for layer in model.layers[:106]:
         layer.trainable = False
-for layer in model.layers[164:]:
+for layer in model.layers[106:]:
         layer.trainable = True
 
 opt = keras.optimizers.SGD(lr=1e-4, momentum=0.9)
