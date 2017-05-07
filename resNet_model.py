@@ -81,13 +81,14 @@ model.load_weights('new4_model.h5')
 # model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
 datagen = ImageDataGenerator(
+        zca_whitening=True,
         rotation_range=40,
         width_shift_range=0.2,
         height_shift_range=0.2,
-        shear_range=0.4,
-        zoom_range=0.4,
+        shear_range=0.2,
+        zoom_range=0.2,
         horizontal_flip=True)
-
+datagen.fit(x_train)
 # earlyStop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=0, verbose=0)
 # filepath = 'pre_weight.h5'
 # checkPoint = keras.callbacks.ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=True)
