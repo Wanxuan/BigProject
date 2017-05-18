@@ -1,24 +1,3 @@
-'''This script demonstrates how to build a deep residual network
-using the Keras functional API.
-get_resne50 returns the deep residual network model (50 layers)
-Please visit Kaiming He's GitHub homepage:
-https://github.com/KaimingHe
-for more information.
-The related paper is
-"Deep Residual Learning for Image Recognition"
-Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun
-http://arxiv.org/abs/1512.03385
-Pretrained weights were converted from Kaiming He's caffe model directly.
-For now we provide weights for the tensorflow backend only,
-thus use 'tf' dim_ordering (e.g. input_shape=(224, 224, 3) for 224*224 color image)
-would accelerate the computation, but we also provide weights for 'th' dim_ordering for compatibility.
-please donwload them at:
-http://pan.baidu.com/s/1o8pO2q2 ('th' dim ordering, For China)
-http://pan.baidu.com/s/1pLanuTt ('tf' dim ordering, For China)
-https://drive.google.com/open?id=0B4ChsjFJvew3NVQ2U041Q0xHRHM ('th' dim ordering, For other countries)
-https://drive.google.com/open?id=0B4ChsjFJvew3NWN5THdxcTdSWmc ('tf' dim ordering, For other countries)
-@author: BigMoyan, University of Electronic Science and Technology of China
-'''
 from keras.layers import merge
 from keras.layers.convolutional import Convolution2D, MaxPooling2D, ZeroPadding2D, AveragePooling2D
 from keras.layers.core import Dense, Activation, Flatten
@@ -29,13 +8,6 @@ from keras.preprocessing.image import load_img, img_to_array
 import keras.backend as K
 import numpy as np
 
-# The names of layers in resnet50 are generated with the following format
-# [type][stage][block]_branch[branch][layer]
-# type: 'res' for conv layer, 'bn' and 'scale' for BN layer
-# stage: from '2' to '5', current stage number
-# block: 'a','b','c'... for different blocks in a stage
-# branch: '1' for shortcut and '2' for main path
-# layer: 'a','b','c'... for different layers in a block
 
 def identity_block(input_tensor, kernel_size, filters, stage, block):
     """
@@ -184,25 +156,10 @@ def get_resnet50():
 
     out = AveragePooling2D((7, 7), dim_ordering=dim_ordering)(out)
     out = Flatten()(out)
-    out = Dense(1000, activation='softmax', name='fc1000')(out)
+    out = Dense(10, activation='softmax', name='fc1000')(out)
 
     model = Model(inp, out)
 
     return model
 
 
-if __name__ == '__main__':
-    K.set_image_dim_ordering('tf')
-    weights_file = K.image_dim_ordering() + '_dim_ordering_resnet50.h5'
-    resnet_model = get_resnet50()
-    resnet_model.load_weights(weights_file)
-    test_img1 = read_img('cat.jpg')
-    test_img2 = read_img('airplane.jpg')
-    # you may download synset_words from address given at the begining of this file
-    class_table = open('synset_words', 'r')
-    lines = class_table.readlines()
-    print "result for test 1 is"
-    print lines[np.argmax(resnet_model.predict(test_img1)[0])]
-    print "result for test 2 is"
-    print lines[np.argmax(resnet_model.predict(test_img2)[0])]
-    class_table.close()
