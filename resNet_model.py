@@ -118,8 +118,8 @@ model.fit_generator(datagen.flow(x_train, y_train, batch_size=batch_size),
 end = time.clock()
 print('Running time: %s Seconds'%(end-start))
 score = model.evaluate(x_test, y_test, verbose=1) # 评估测试集loss损失和精度acc
-print('Validation score(val_loss): %.4f' % score[0])  # loss损失
-print('Validation accuracy: %.4f' % score[1]) # 精度acc
+print('Test score(val_loss): %.4f' % score[0])  # loss损失
+print('Test accuracy: %.4f' % score[1]) # 精度acc
 
 model.save_weights('resNet_model.h5')
 with open('resNet_model.json', 'w') as f:
